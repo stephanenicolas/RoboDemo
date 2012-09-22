@@ -37,7 +37,7 @@ Creation of `DemoActivity` is straightforward, have a look at the sample to put 
 
 RoboDemo will ease all those steps and you will just have a few lines of code to add to your project.
 
-To learn more, visit [RoboDemo Starter Guide](https://github.com/stephanenicolas/RoboDemo/issues/1).
+To learn more, visit [RoboDemo Starter Guide](https://github.com/stephanenicolas/RoboDemo/issues/1) and [browse RoboDemo Javadocs online](http://stephanenicolas.github.com/RoboDemo/apidocs/index.html).
 
 Customization 
 -------------
@@ -49,7 +49,8 @@ RoboDemo can be customized in quite a number of ways :
 * using custom drawable and text locations
 * and some more for sure...
 
-To learn more, visit [RoboDemo Starter Guide](https://github.com/stephanenicolas/RoboDemo/issues/1).
+To learn more, visit [RoboDemo Starter Guide](https://github.com/stephanenicolas/RoboDemo/issues/1) and [browse RoboDemo Javadocs online](http://stephanenicolas.github.com/RoboDemo/apidocs/index.html).
+
 
 Know limitations
 ----------------
