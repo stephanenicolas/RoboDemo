@@ -76,3 +76,22 @@ Configuration
   * Without m2e : unzip the library in the same workspace as your project, and use the library as an android library
   * With m2e : unzip the library in the same workspace as your project, and copy sample configuration 
   
+History
+-------
+
+RoboDemo has been initiated during a project for [Octo Technology](http://www.octo.com) as we implemented a "move file" activity.
+This kind of interaction is finally unusual in android and almost every file explorer app uses its custom workflow to achive it.
+
+We decided to implement some kind of tutorial to explain our idea (basically, inspired from OI File Manager).
+
+We asked a question about it [on Stack Over Flow](http://stackoverflow.com/q/12148381/693752) and were redirected to 
+[Espiandev / ShowcaseView](https://github.com/Espiandev/ShowcaseView). We finally decided to use our own solution, and it became a 
+lib in September 2012 : RoboDemo.
+
+Alternative
+------------
+
+You can also visit [Espiandev / ShowcaseView](https://github.com/Espiandev/ShowcaseView). This project is mature and clean as well.
+It provides a "native" feeling of tutorial for apps.
+
+
