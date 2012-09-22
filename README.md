@@ -36,6 +36,9 @@ Creation of `DemoActivity` is straightforward, have a look at the sample to put 
 
 RoboDemo will ease all those steps and you will just have a few lines of code to add to your project.
 
+Customization 
+-------------
+
 RoboDemo can be customized in quite a number of ways : 
 * using a custom drawable
 * using transparency or not to highlight the areas to click one
