@@ -31,17 +31,17 @@ points to click on and a text. The  `Activity` under showcase is dimmed and the 
 the user has to click.
 
 Creation of `DemoActivity` is straightforward, have a look at the sample to put in place RoboDemo in your own app :
-# create a `DemoActivity`, using a custom `DrawAdapter`
-# transmit widget positions and texts to display during showcase to the `DemoActivity` from the `Activity` under showcase.
+1. create a `DemoActivity`, using a custom `DrawAdapter`
+2. transmit widget positions and texts to display during showcase to the `DemoActivity` from the `Activity` under showcase.
 
 RoboDemo will ease all those steps and you will just have a few lines of code to add to your project.
 
 RoboDemo can be customized in quite a number of ways : 
-# using a custom drawable
-# using transparency or not to highlight the areas to click one
-# using custom `Paint` to render text, and the grey area under texts
-# using custom drawable and text locations
-# etc..
+* using a custom drawable
+* using transparency or not to highlight the areas to click one
+* using custom `Paint` to render text, and the grey area under texts
+* using custom drawable and text locations
+* and some more for sure...
 
 Know limitations
 ----------------
