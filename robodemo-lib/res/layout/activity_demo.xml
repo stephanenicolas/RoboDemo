@@ -4,7 +4,7 @@
     android:background="#77000000"
     android:orientation="vertical" >
 
-    <com.octo.android.demo.DrawView
+    <com.octo.android.robodemo.DrawView
         android:id="@+id/drawView_move_content_demo"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
