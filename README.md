@@ -1,7 +1,7 @@
 RoboDemo
 ========
 
-RoboDemo is a ShowCase library for Android to demonstrate how a given Activity works to users.
+RoboDemo is a ShowCase library for Android to demonstrate to users how a given Activity works.
 
 Screenshots 
 -----------
