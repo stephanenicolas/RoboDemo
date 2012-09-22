@@ -1,0 +1,10 @@
+<resources>
+
+    <string name="app_name">Demo</string>
+    <string name="menu_refresh">Refresh</string>
+    <string name="menu_show_again">Show again</string>
+    <string name="title_activity_main">Activity under demo</string>
+    <string name="text_clear">Clear</string>
+    <string name="text_move_demo_step_1">Clear the list by clicking this button</string>
+    <string name="text_move_demo_step_2">Refresh the list using this menu item</string>
+</resources>

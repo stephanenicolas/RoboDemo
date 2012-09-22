@@ -1,0 +1,55 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#77000000"
+    android:orientation="vertical" >
+
+    <com.octo.android.demo.DrawView
+        android:id="@+id/drawView_move_content_demo"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@android:color/transparent"
+        android:onClick="onTap" />
+
+    <RelativeLayout
+        android:id="@+id/layout_demo_buttons"
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:background="@android:color/black"
+        android:visibility="gone" >
+
+        <CheckBox
+            android:id="@+id/checkbox_demo_never_again"
+            style="@android:style/Widget.CompoundButton.CheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/button_demo_finish"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="7dp" />
+
+        <TextView
+            android:id="@+id/textview_demo_never_again"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@id/button_demo_finish"
+            android:layout_marginLeft="7dp"
+            android:layout_toRightOf="@id/checkbox_demo_never_again"
+            android:clickable="true"
+            android:onClick="checkNeverShowAgain"
+            android:text="@string/text_never_again"
+            android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium.Inverse" />
+
+        <Button
+            android:id="@id/button_demo_finish"
+            style="@android:style/Widget.DeviceDefault.Light.Button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="7dp"
+            android:onClick="finish"
+            android:text="@string/text_OK" />
+    </RelativeLayout>
+
+</LinearLayout>

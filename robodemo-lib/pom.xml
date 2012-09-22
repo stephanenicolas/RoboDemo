@@ -1,0 +1,66 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                      http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <version>0.0.1-SNAPSHOT</version>
+        <groupId>com.octo.android.robodemo</groupId>
+        <artifactId>robodemo-parent</artifactId>
+    </parent>
+
+    <artifactId>robodemo-lib</artifactId>
+    <packaging>apklib</packaging>
+
+    <properties>
+        <downloadSources>true</downloadSources>
+        <downloadJavadocs>true</downloadJavadocs>
+     </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.google.android</groupId>
+            <artifactId>android</artifactId>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <sourceDirectory>src</sourceDirectory>
+        <testSourceDirectory>test</testSourceDirectory>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>com.jayway.maven.plugins.android.generation2</groupId>
+                <artifactId>android-maven-plugin</artifactId>
+                <extensions>true</extensions>
+            </plugin>
+			<plugin>
+			    <groupId>org.codehaus.mojo</groupId>
+			    <artifactId>build-helper-maven-plugin</artifactId>
+			    <version>1.7</version>
+			    <executions>
+			        <execution>
+			            <phase>package</phase>
+			            <goals>
+			                <goal>attach-artifact</goal>
+			            </goals>
+			            <configuration>
+			                <artifacts>
+			                    <artifact>
+			                        <type>jar</type>
+			                        <file>${build.directory}/${build.finalName}.jar</file>
+			                    </artifact>
+			                </artifacts>
+			            </configuration>
+			        </execution>
+			    </executions>
+			</plugin>            
+        </plugins>
+    </build>
+
+</project>

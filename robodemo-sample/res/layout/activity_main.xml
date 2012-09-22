@@ -1,0 +1,20 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <ListView
+        android:id="@+id/listview_main"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@+id/button_clear" />
+
+    <Button
+        android:id="@id/button_clear"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp" 
+        android:text="@string/text_clear"
+        android:layout_alignParentBottom="true"
+        android:onClick="onClear"/>
+
+</RelativeLayout>

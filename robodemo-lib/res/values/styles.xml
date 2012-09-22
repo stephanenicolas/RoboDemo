@@ -1,0 +1,12 @@
+<resources>
+
+    <!--  For action bar sherlock activities use parent = @style/Theme.Sherlock -->
+    <style name="Theme.RoboDemo" parent="@android:style/Theme.Light.NoTitleBar.Fullscreen">
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+</resources>
