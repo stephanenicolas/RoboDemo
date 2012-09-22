@@ -13,7 +13,6 @@
     <url>https://github.com/stephanenicolas/robodemo</url>
 
     <modules>
-        <!-- <module>cfe-build-config</module> -->
         <module>robodemo-lib</module>
         <module>robodemo-sample</module>
     </modules>
@@ -24,6 +23,39 @@
        <developerConnection>scm:git:ssh://git@github.com:stephanenicolas/RoboDemo.git</developerConnection>
     </scm>
     
+    <repositories>
+        <repository>
+            <id>octo.releases</id>
+            <url>https://projets.octo.com/nexus/content/repositories/releases/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+              <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>octomirror</id>
+            <url>https://projets.octo.com/nexus/content/repositories/central/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+              <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>octo.thirdparty</id>
+            <url>https://projets.octo.com/nexus/content/repositories/thirdparty/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+              <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
     <licenses>
         <license>
             <name>Apache 2</name>
@@ -50,6 +82,7 @@
         <android.version>4.1.1.4</android.version>
         <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
         <sonar.surefire.reportsPath>target/surefire-reports</sonar.surefire.reportsPath>
+	    <github.global.server>github</github.global.server>
     </properties>
 
     <dependencyManagement>
