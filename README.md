@@ -76,6 +76,13 @@ Configuration
   * Without m2e : unzip the library in the same workspace as your project, and use the library as an android library
   * With m2e : unzip the library in the same workspace as your project, and copy sample configuration 
   
+Copyright and Licensing
+-----------------------
+
+Copyright Stéphane Nicolas © 2012. All rights reserved.
+
+This library is disributed under an Apache 2.0 License.
+
 History
 -------
 
