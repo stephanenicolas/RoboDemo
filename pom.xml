@@ -18,9 +18,9 @@
     </modules>
 
     <scm>
-       <connection>scm:git:ssh://git@github.com:stephanenicolas/RoboDemo.git</connection>
-       <url>git:ssh://git@github.com:stephanenicolas/RoboDemo.git</url>
-       <developerConnection>scm:git:ssh://git@github.com:stephanenicolas/RoboDemo.git</developerConnection>
+       <connection>scm:git:ssh://git@github.com/stephanenicolas/RoboDemo.git</connection>
+       <url>git:ssh://git@github.com/stephanenicolas/RoboDemo.git</url>
+       <developerConnection>scm:git:ssh://git@github.com/stephanenicolas/RoboDemo.git</developerConnection>
     </scm>
     
     <repositories>
