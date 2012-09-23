@@ -74,7 +74,7 @@ Configuration
 * In maven : just deploy the library in your nexus, and copy sample configuration
 * In Eclipse :
   * Without m2e : unzip the library in the same workspace as your project, and use the library as an android library
-  * With m2e : unzip the library in the same workspace as your project, and copy sample configuration 
+  * With m2e : unzip the library in the same workspace as your project, and copy dependencies in the pom of the sample 
   
 Copyright and Licensing
 -----------------------
