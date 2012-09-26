@@ -3,6 +3,8 @@ RoboDemo
 
 RoboDemo is a ShowCase library for Android to demonstrate to users how a given Activity works.
 
+A sample is available in the [download area](https://github.com/stephanenicolas/RoboDemo/downloads) of the repository.
+
 Screenshots 
 -----------
 
