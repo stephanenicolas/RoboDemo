@@ -87,7 +87,6 @@ public class DrawView extends View {
                     }
                 }
             }
-            handler.sendEmptyMessageDelayed( AnimatorHandler.ANIMATION_MESSAGE_ID, delayBetweenPoints );
         }
     }
 
@@ -144,6 +143,7 @@ public class DrawView extends View {
      */
     public void setDelayBetweenPoints( long delayBetweenPoints ) {
         this.delayBetweenPoints = delayBetweenPoints;
+        initializeHandler();
     }
 
     public long getDelayBetweenPoints() {
@@ -194,7 +194,7 @@ public class DrawView extends View {
     }
 
     private void initializeHandler() {
-        handler = new AnimatorHandler( this );
+        handler = new AnimatorHandler( this, delayBetweenPoints );
     }
 
     private void initUnderTextPaint() {
@@ -278,6 +278,11 @@ public class DrawView extends View {
         }
         doUseClearPorterDuffXfermode( canvas, drawable );
         drawable.draw( canvas );
+        /*
+         * Shall we add some debug mode ? Paint paint = new Paint(); paint.setColor(
+         * getContext().getResources().getColor( android.R.color.holo_orange_dark ) ); canvas.drawCircle(
+         * drawable.getBounds().exactCenterX(), drawable.getBounds().exactCenterY(), 5, paint );
+         */
     }
 
     /**
@@ -313,9 +318,12 @@ public class DrawView extends View {
         private static final int ANIMATION_MESSAGE_ID = 0;
 
         private WeakReference< DrawView > weakReference;
+        private long delayBetweenPoints;
 
-        private AnimatorHandler( DrawView drawView ) {
+        private AnimatorHandler( DrawView drawView, long delayBetweenPoints ) {
             this.weakReference = new WeakReference< DrawView >( drawView );
+            this.delayBetweenPoints = delayBetweenPoints;
+            sendEmptyMessageDelayed( AnimatorHandler.ANIMATION_MESSAGE_ID, delayBetweenPoints );
         }
 
         @Override
@@ -327,6 +335,7 @@ public class DrawView extends View {
                 }
                 DrawView drawView = weakReference.get();
                 drawView.showNextPoint();
+                sendEmptyMessageDelayed( AnimatorHandler.ANIMATION_MESSAGE_ID, delayBetweenPoints );
             }
 
         }

@@ -78,6 +78,10 @@ public abstract class DemoActivity extends Activity {
         drawView.setDrawViewAdapter( getDrawViewAdapter() );
     }
 
+    protected DrawView getDrawView() {
+        return drawView;
+    }
+
     @Override
     public void onConfigurationChanged( Configuration newConfig ) {
         super.onConfigurationChanged( newConfig );

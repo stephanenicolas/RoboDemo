@@ -99,7 +99,7 @@ public class LabeledPoint extends Point implements Parcelable {
      *            the new text of the point.
      */
     public LabeledPoint( View v, String text ) {
-        this( v, 50, 50, text );
+        this( v, 50, 0, text );
     }
 
     /**
@@ -135,8 +135,8 @@ public class LabeledPoint extends Point implements Parcelable {
     public LabeledPoint( View v, float widthPercent, float heightPercent, String text ) {
         int[] location = new int[ 2 ];
         v.getLocationOnScreen( location );
-        x = location[ 0 ] + Math.round( widthPercent * v.getWidth() / 100 );
-        y = location[ 1 ] + Math.round( heightPercent * v.getHeight() / 100 );
+        this.x = location[ 0 ] + Math.round( widthPercent * v.getMeasuredWidth() / 100 );
+        this.y = location[ 1 ] + Math.round( heightPercent * v.getMeasuredHeight() / 100 );
         setText( text );
     }
 

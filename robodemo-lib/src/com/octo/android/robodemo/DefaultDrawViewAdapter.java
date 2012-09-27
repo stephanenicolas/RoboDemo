@@ -2,10 +2,10 @@ package com.octo.android.robodemo;
 
 import java.util.List;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.text.Layout;
@@ -28,6 +28,7 @@ import android.view.WindowManager;
 public class DefaultDrawViewAdapter implements DrawViewAdapter {
 
     private static final float TEXT_MARGIN = 7;
+    private static final float DEFAULT_FONT_SIZE = 22;
     private Drawable drawable;
     private TextPaint textPaint;
     private int maxTextWidth = 80;
@@ -35,14 +36,43 @@ public class DefaultDrawViewAdapter implements DrawViewAdapter {
     private int screenHeight = 0;
     private List< LabeledPoint > listPoints;
     private int margin;
+    private Context context;
 
-    @SuppressWarnings("deprecation")
-    @TargetApi(13)
+    public DefaultDrawViewAdapter( Context context, List< LabeledPoint > listPoints ) {
+        this.context = context;
+        this.drawable = context.getResources().getDrawable( R.drawable.ic_lockscreen_handle_pressed );
+        this.textPaint = initializeDefaultTextPaint();
+        this.listPoints = listPoints;
+
+        initialize();
+
+    }
+
     public DefaultDrawViewAdapter( Context context, Drawable drawable, TextPaint textPaint, List< LabeledPoint > listPoints ) {
+        this.context = context;
         this.drawable = drawable;
         this.textPaint = textPaint;
         this.listPoints = listPoints;
 
+        initialize();
+
+    }
+
+    public Context getContext() {
+        return context;
+    }
+
+    private TextPaint initializeDefaultTextPaint() {
+        TextPaint textPaint = new TextPaint();
+        textPaint.setColor( getContext().getResources().getColor( android.R.color.white ) );
+        textPaint.setShadowLayer( 2.0f, 0, 2.0f, android.R.color.black );
+        // http://stackoverflow.com/questions/3061930/how-to-set-unit-for-paint-settextsize
+        textPaint.setTextSize( TypedValue.applyDimension( TypedValue.COMPLEX_UNIT_DIP, DEFAULT_FONT_SIZE, getContext().getResources().getDisplayMetrics() ) );
+        return textPaint;
+    }
+
+    @SuppressWarnings("deprecation")
+    private void initialize() {
         WindowManager wm = (WindowManager) context.getSystemService( Context.WINDOW_SERVICE );
         Display display = wm.getDefaultDisplay();
         if ( Build.VERSION.SDK_INT > Build.VERSION_CODES.HONEYCOMB_MR2 ) {
@@ -60,7 +90,6 @@ public class DefaultDrawViewAdapter implements DrawViewAdapter {
             maxTextWidth = screenWidth / 3;
         }
         margin = (int) TypedValue.applyDimension( TypedValue.COMPLEX_UNIT_DIP, TEXT_MARGIN, context.getResources().getDisplayMetrics() );
-
     }
 
     @Override
@@ -80,7 +109,11 @@ public class DefaultDrawViewAdapter implements DrawViewAdapter {
     @Override
     public Layout getTextLayoutAt( int position ) {
         String text = listPoints.get( position ).getText();
-        StaticLayout staticLayout = new StaticLayout( text, textPaint, maxTextWidth, Alignment.ALIGN_CENTER, 1, 0, false );
+        Rect bounds = new Rect();
+        textPaint.getTextBounds( text, 0, text.length(), bounds );
+
+        int width = Math.min( bounds.width(), maxTextWidth );
+        StaticLayout staticLayout = new StaticLayout( text, textPaint, width, Alignment.ALIGN_CENTER, 1, 0, false );
         return staticLayout;
     }
 
