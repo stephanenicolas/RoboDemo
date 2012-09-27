@@ -3,6 +3,8 @@ RoboDemo
 
 RoboDemo is a ShowCase library for Android to demonstrate to users how a given Activity works.
 
+A sample is available in the [download area](https://github.com/stephanenicolas/RoboDemo/downloads) of the repository.
+
 Screenshots 
 -----------
 
@@ -37,7 +39,7 @@ Creation of `DemoActivity` is straightforward, have a look at the sample to put 
 
 RoboDemo will ease all those steps and you will just have a few lines of code to add to your project.
 
-To learn more, visit [RoboDemo Starter Guide](https://github.com/stephanenicolas/RoboDemo/issues/1) and [browse RoboDemo Javadocs online](http://stephanenicolas.github.com/RoboDemo/apidocs/index.html).
+To learn more, visit [RoboDemo Starter Guide](https://github.com/stephanenicolas/RoboDemo/wiki/RoboDemo-Starter-Guide) and [browse RoboDemo Javadocs online](http://stephanenicolas.github.com/RoboDemo/apidocs/index.html).
 
 Customization 
 -------------
@@ -49,7 +51,7 @@ RoboDemo can be customized in quite a number of ways :
 * using custom drawable and text locations
 * and some more for sure...
 
-To learn more, visit [RoboDemo Starter Guide](https://github.com/stephanenicolas/RoboDemo/issues/1) and [browse RoboDemo Javadocs online](http://stephanenicolas.github.com/RoboDemo/apidocs/index.html).
+To learn more, visit [RoboDemo Starter Guide](https://github.com/stephanenicolas/RoboDemo/wiki/RoboDemo-Starter-Guide) and [browse RoboDemo Javadocs online](http://stephanenicolas.github.com/RoboDemo/apidocs/index.html).
 
 
 Know limitations
@@ -74,8 +76,15 @@ Configuration
 * In maven : just deploy the library in your nexus, and copy sample configuration
 * In Eclipse :
   * Without m2e : unzip the library in the same workspace as your project, and use the library as an android library
-  * With m2e : unzip the library in the same workspace as your project, and copy sample configuration 
+  * With m2e : unzip the library in the same workspace as your project, and copy dependencies in the pom of the sample 
   
+Copyright and Licensing
+-----------------------
+
+Copyright Stéphane Nicolas © 2012. All rights reserved.
+
+This library is disributed under an Apache 2.0 License.
+
 History
 -------
 
