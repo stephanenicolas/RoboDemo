@@ -25,29 +25,30 @@ From left to right :
 Overview
 --------
 
-There are some cases where application needs to provide more complex interactions that usuals, or new ones, not covered by Android UI Guidelines.
+There are some cases where applications require more complex interactions from users,
+or new interactions not covered by Android UI Guidelines.
 
 RoboDemo eases creating showcases / explaining / demonstrating of such activities to users.
 It will display an overlay activity to illustrate the `Activity` under showcase. The explanations consist of a serie of
-points to click on and a text. The  `Activity` under showcase is dimmed and the showcase highlights some transparent area where
-the user has to click.
+points to click on and their associated labels. The  `Activity` under showcase is dimmed and the showcase highlights
+transparent areas to point views or positions users have to click.
 
 Creation of `DemoActivity` is straightforward, have a look at the sample to put in place RoboDemo in your own app :
 
 1. create a `DemoActivity`, using a custom `DrawAdapter`
-2. transmit widget positions and texts to display during showcase to the `DemoActivity` from the `Activity` under showcase.
+2. in the `Activity` undershowcase, pass views or coordinates and their associated labels. 
 
-RoboDemo will ease all those steps and you will just have a few lines of code to add to your project.
+RoboDemo has been designed to be convinient.
 
 To learn more, visit [RoboDemo Starter Guide](https://github.com/stephanenicolas/RoboDemo/wiki/RoboDemo-Starter-Guide) and [browse RoboDemo Javadocs online](http://stephanenicolas.github.com/RoboDemo/apidocs/index.html).
 
 Customization 
 -------------
 
-RoboDemo can be customized in quite a number of ways : 
+RoboDemo can be customized in different ways : 
 * using a custom drawable
-* using transparency or not to highlight the areas to click one
-* using custom `Paint` to render text, and the grey area under texts
+* using transparency or not to highlight the areas to click on
+* using custom `Paint` to render labels, and the area under labels
 * using custom drawable and text locations
 * and some more for sure...
 
@@ -58,7 +59,7 @@ Know limitations
 ----------------
 
 The base class for DemoActivity is based on `android.app.Activity`. Unfortunately, this can't cover all inheritance cases for projects
-base on ActionBarSherlock or RoboGuice or a custom Activity base class per project.
+based on ActionBarSherlock or RoboGuice or a custom Activity base class per project.
 
 In that case, we recommend using all classes from the library as well but rewrite your own `DemoActivity` changing only its super class.
 
@@ -76,7 +77,7 @@ Configuration
 * In maven : just deploy the library in your nexus, and copy sample configuration
 * In Eclipse :
   * Without m2e : unzip the library in the same workspace as your project, and use the library as an android library
-  * With m2e : unzip the library in the same workspace as your project, and copy dependencies in the pom of the sample 
+  * With m2e : unzip the library in the same workspace as your project, and copy dependencies in the pom.xml file of the sample 
   
 
 License
@@ -100,7 +101,7 @@ License
 History
 -------
 
-RoboDemo has been initiated during a project for [Octo Technology](http://www.octo.com) as we implemented a "move file" activity.
+RoboDemo has been initiated during a project for [Octo Technology](http://www.octo.com) as we implemented an Activity in which user had to move files in the filesystem.
 This kind of interaction is finally unusual in android and almost every file explorer app uses its custom workflow to achive it.
 
 We decided to implement some kind of tutorial to explain our idea (basically, inspired from OI File Manager).
