@@ -116,4 +116,7 @@ Alternative
 You can also visit [Espiandev / ShowcaseView](https://github.com/Espiandev/ShowcaseView). This project is mature and clean as well.
 It provides a "native" feeling of tutorial for apps.
 
+RoboDemo in the News !!
+-----------------------
 
+* [Android dev weekly, issue #49] (http://androiddevweekly.com/2013/03/11/Issue-49.html?utm_source=feedburner&utm_medium=feed&utm_campaign=Feed%3A+AndroidDevWeekly+%28%23AndroidDev+Weekly%29)
