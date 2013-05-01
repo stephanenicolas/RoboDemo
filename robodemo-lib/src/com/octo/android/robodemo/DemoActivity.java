@@ -63,9 +63,13 @@ public abstract class DemoActivity extends Activity {
 
     @Override
     public void onCreate( Bundle savedInstanceState ) {
-        super.onCreate( savedInstanceState );
         getWindow().requestFeature( Window.FEATURE_NO_TITLE );
+        super.onCreate( savedInstanceState );
         setContentView( R.layout.activity_demo );
+        // if you use action bar sherlock, add this line
+        /*
+         * if ( getSupportActionBar() != null ) { getSupportActionBar().hide(); }
+         */
 
         Bundle bundle = savedInstanceState != null ? savedInstanceState : getIntent().getExtras();
 
