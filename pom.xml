@@ -28,6 +28,7 @@
        <developerConnection>scm:git:ssh://git@github.com/stephanenicolas/RoboDemo.git</developerConnection>
     </scm>
     
+    <!-- 
     <repositories>
         <repository>
             <id>octo.releases</id>
@@ -60,6 +61,7 @@
             </snapshots>
         </repository>
     </repositories>
+     -->
 
     <licenses>
         <license>
