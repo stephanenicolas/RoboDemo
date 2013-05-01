@@ -191,6 +191,7 @@
         </pluginManagement>
     </build>
     
+    <!-- 
     <distributionManagement>
         <snapshotRepository>
             <id>octo</id>
@@ -203,6 +204,6 @@
             <url>https://projets.octo.com/nexus/content/repositories/releases/</url>
         </repository>
     </distributionManagement>
-    
+     -->
 
 </project>
