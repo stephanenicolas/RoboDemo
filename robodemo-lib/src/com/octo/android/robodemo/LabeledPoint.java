@@ -1,6 +1,5 @@
 package com.octo.android.robodemo;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
@@ -155,9 +154,7 @@ public class LabeledPoint extends Point implements Parcelable {
      * @param text
      *            the new text of the point.
      */
-    
-	@SuppressLint("NewApi")
-	@SuppressWarnings("deprecation")
+    @SuppressWarnings("deprecation")
     public LabeledPoint( Activity activity, float widthPercent, float heightPercent, String text ) {
 
         Display display = activity.getWindowManager().getDefaultDisplay();
@@ -207,23 +204,11 @@ public class LabeledPoint extends Point implements Parcelable {
      * @param out
      *            The parcel to write the point's coordinates into
      */
+    @Override
     public void writeToParcel( Parcel out, int flags ) {
         out.writeInt( x );
         out.writeInt( y );
         out.writeString( text );
-    }
-    
-    /**
-     * Set the point's coordinates from the data stored in the specified parcel. To write a point to a parcel, call
-     * writeToParcel().
-     * 
-     * @param in
-     *            The parcel to read the point's coordinates from
-     */
-    public void readFromParcel( Parcel in ) {
-        x = in.readInt();
-        y = in.readInt();
-        text = in.readString();
     }
 
     /**
@@ -249,5 +234,17 @@ public class LabeledPoint extends Point implements Parcelable {
         }
     };
 
-    
+    /**
+     * Set the point's coordinates from the data stored in the specified parcel. To write a point to a parcel, call
+     * writeToParcel().
+     * 
+     * @param in
+     *            The parcel to read the point's coordinates from
+     */
+    @Override
+    public void readFromParcel( Parcel in ) {
+        x = in.readInt();
+        y = in.readInt();
+        text = in.readString();
+    }
 }

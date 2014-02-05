@@ -2,7 +2,6 @@ package com.octo.android.robodemo;
 
 import java.util.List;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Point;
@@ -72,9 +71,8 @@ public class DefaultDrawViewAdapter implements DrawViewAdapter {
         return textPaint;
     }
 
-	@SuppressLint("NewApi")
     @SuppressWarnings("deprecation")
-	private void initialize() {
+    private void initialize() {
         WindowManager wm = (WindowManager) context.getSystemService( Context.WINDOW_SERVICE );
         Display display = wm.getDefaultDisplay();
         if ( Build.VERSION.SDK_INT > Build.VERSION_CODES.HONEYCOMB_MR2 ) {

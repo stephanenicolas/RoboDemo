@@ -15,7 +15,7 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import com.octo.android.robodemo.LabeledPoint;
-import com.octo.android.robodemo.sample.R;
+import com.octo.android.robodemo.R;
 import com.octo.android.robodemo.RoboDemo;
 
 /**
