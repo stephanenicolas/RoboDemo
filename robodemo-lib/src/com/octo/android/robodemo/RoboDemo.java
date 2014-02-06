@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 
 public class RoboDemo {
 
@@ -25,6 +26,24 @@ public class RoboDemo {
     public static void prepareDemoActivityIntent( Intent intent, String demoActivityId, ArrayList< LabeledPoint > listPoints ) {
         intent.putExtra( BUNDLE_KEY_DEMO_ACTIVITY_ID, demoActivityId );
         intent.putParcelableArrayListExtra( BUNDLE_KEY_DEMO_ACTIVITY_ARRAY_LIST_POINTS, listPoints );
+    }
+    
+    /**
+     * Prepares the arguments for a DemoFragment.
+     * 
+     * @param args
+     *            the bundle to be used to launch the sublcass of {@link DemoFragment}.
+     * @param demoActivityId
+     *            the id that will be used to store the information about the 'never show again' checkbox.
+     * @param listPoints
+     *            an {@link ArrayList} of {@link LabeledPoint} to Display.
+     * @return the arguments for the Fragment.
+     */
+    public static Bundle prepareDemoFragmentArguments( Bundle args, String demoActivityId, ArrayList< LabeledPoint > listPoints ) {
+    	if (args == null) args = new Bundle();
+    	args.putString(BUNDLE_KEY_DEMO_ACTIVITY_ID, demoActivityId);
+    	args.putParcelableArrayList( BUNDLE_KEY_DEMO_ACTIVITY_ARRAY_LIST_POINTS, listPoints );
+    	return args;
     }
 
     /**

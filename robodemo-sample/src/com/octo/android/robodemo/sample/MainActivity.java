@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Menu;
@@ -15,7 +14,6 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import com.octo.android.robodemo.LabeledPoint;
-import com.octo.android.robodemo.R;
 import com.octo.android.robodemo.RoboDemo;
 
 /**
@@ -105,7 +103,8 @@ public class MainActivity extends Activity {
      */
     private void displayDemoIfNeeded() {
 
-        boolean neverShowDemoAgain = RoboDemo.isNeverShowAgain( this, DEMO_ACTIVITY_ID );
+//        boolean neverShowDemoAgain = RoboDemo.isNeverShowAgain( this, DEMO_ACTIVITY_ID );
+        boolean neverShowDemoAgain = RoboDemo.isNeverShowAgain( this,  MainActivityDemoFragment.DEMO_FRAGMENT_ID);
 
         if ( !neverShowDemoAgain && showDemo ) {
             showDemo = false;
@@ -119,9 +118,13 @@ public class MainActivity extends Activity {
             arrayListPoints.add( p );
 
             // start DemoActivity.
-            Intent intent = new Intent( this, MainActivityDemoActivity.class );
-            RoboDemo.prepareDemoActivityIntent( intent, DEMO_ACTIVITY_ID, arrayListPoints );
-            startActivity( intent );
+//            Intent intent = new Intent( this, MainActivityDemoActivity.class );
+//            RoboDemo.prepareDemoActivityIntent( intent, DEMO_ACTIVITY_ID, arrayListPoints );
+//            startActivity( intent );
+            
+            // start DemoFragment
+            MainActivityDemoFragment f = MainActivityDemoFragment.newInstance(arrayListPoints);
+            f.show(getFragmentManager(), MainActivityDemoFragment.TAG);
         }
     }
 
