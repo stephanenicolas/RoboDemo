@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
+import com.octo.android.robodemo.DemoFragment;
 import com.octo.android.robodemo.LabeledPoint;
 import com.octo.android.robodemo.RoboDemo;
 
@@ -104,7 +105,7 @@ public class MainActivity extends Activity {
     private void displayDemoIfNeeded() {
 
 //        boolean neverShowDemoAgain = RoboDemo.isNeverShowAgain( this, DEMO_ACTIVITY_ID );
-        boolean neverShowDemoAgain = RoboDemo.isNeverShowAgain( this,  MainActivityDemoFragment.DEMO_FRAGMENT_ID);
+        boolean neverShowDemoAgain = RoboDemo.isNeverShowAgain( this,  DemoFragment.DEMO_FRAGMENT_ID);
 
         if ( !neverShowDemoAgain && showDemo ) {
             showDemo = false;
@@ -123,8 +124,8 @@ public class MainActivity extends Activity {
 //            startActivity( intent );
             
             // start DemoFragment
-            MainActivityDemoFragment f = MainActivityDemoFragment.newInstance(arrayListPoints);
-            f.show(getFragmentManager(), MainActivityDemoFragment.TAG);
+            DemoFragment f = DemoFragment.newInstance(arrayListPoints);
+            f.show(getFragmentManager(), DemoFragment.TAG);
         }
     }
 

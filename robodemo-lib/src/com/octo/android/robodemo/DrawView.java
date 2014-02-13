@@ -1,9 +1,12 @@
 package com.octo.android.robodemo;
 
 import java.lang.ref.WeakReference;
+import java.util.List;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.PorterDuff.Mode;
@@ -13,7 +16,9 @@ import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Layout;
+import android.text.TextPaint;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation.AnimationListener;
 
@@ -22,11 +27,12 @@ import android.view.animation.Animation.AnimationListener;
  * draw.
  * 
  * @author sni
- * 
+ * @author ericharlow
  */
 public class DrawView extends View {
 
     private static final int DRAW_UNDER_TEXT_CORNER_RADIUS = 7;
+    private static final int DEFAULT_FONT_SIZE = 22;
 
     /**
      * The defaut delay between points in animation in ms.
@@ -37,32 +43,57 @@ public class DrawView extends View {
 
     private AnimatorHandler handler;
     private int currentPointPositionToDisplay = 0;
-    private long delayBetweenPoints = DELAY_BETWEEN_POINTS;
-    private boolean isShowingAllPointsAtTheEndOfAnimation = true;
-    private boolean isDrawingOnePointAtATime = false;
+    private long delayBetweenPoints;
+    private boolean isShowingAllPointsAtTheEndOfAnimation;
+    private boolean isDrawingOnePointAtATime;
 
     private AnimationListener animationListener;
 
     private Paint underTextPaint;
 
     private boolean isClearPorterDuffXfermodeEnabled = true;
+    
+    private TouchDispatchDelegate mTouchDispatchDelegate;
 
     public DrawView( Context context, AttributeSet attrs, int defStyle ) {
         super( context, attrs, defStyle );
+        
+        if (attrs!=null) {
+            TypedArray a = context.obtainStyledAttributes(attrs,
+                                                      R.styleable.DrawView,
+                                                      defStyle, 0);
+            TextPaint textPaint = new TextPaint();
+            textPaint.setColor(a.getColor(R.styleable.DrawView_textColor, Color.WHITE));
+            textPaint.setAntiAlias(a.getBoolean(R.styleable.DrawView_textAntiAlias, true));
+            textPaint.setTextSize(a.getDimension(R.styleable.DrawView_textSize, DEFAULT_FONT_SIZE));
+            textPaint.setShadowLayer(a.getFloat(R.styleable.DrawView_shadowLayerBlurRadius, 2.0f),
+            		a.getFloat(R.styleable.DrawView_shadowLayerXOffset, 0),
+            		a.getFloat(R.styleable.DrawView_shadowLayerYOffset, 2.0f),
+            		a.getColor(R.styleable.DrawView_shadowLayerColor, Color.BLACK));
+            
+            Drawable drawable = a.getDrawable(R.styleable.DrawView_drawable);
+            drawViewAdapter = new DefaultDrawViewAdapter(context, drawable, textPaint, null);
+            
+            underTextPaint = new Paint();
+            underTextPaint.setColor( a.getColor(R.styleable.DrawView_underTextPaintColor, Color.DKGRAY));//context.getResources().getColor(android.R.color.darker_gray)
+            underTextPaint.setAlpha( a.getInt(R.styleable.DrawView_underTextPaintAlpha, 150) );
+            
+            isShowingAllPointsAtTheEndOfAnimation = a.getBoolean(R.styleable.DrawView_isShowingAllPointsAtTheEndOfAnimation, true);
+            isDrawingOnePointAtATime = a.getBoolean(R.styleable.DrawView_isDrawingOnePointAtATime, false);
+            delayBetweenPoints = a.getInt(R.styleable.DrawView_delayBetweenPoints, (int) DELAY_BETWEEN_POINTS);
+            
+            a.recycle();
+          }
+        
         initializeHandler();
-        initUnderTextPaint();
     }
 
-    public DrawView( Context context, AttributeSet attrs ) {
-        super( context, attrs );
-        initializeHandler();
-        initUnderTextPaint();
+	public DrawView( Context context, AttributeSet attrs ) {
+		this(context, attrs, 0);
     }
 
     public DrawView( Context context ) {
-        super( context );
-        initializeHandler();
-        initUnderTextPaint();
+    	this(context, null);
     }
 
     @Override
@@ -71,7 +102,7 @@ public class DrawView extends View {
 
         if ( isAnimationTerminated() ) {
             if ( isShowingAllPointsAtTheEndOfAnimation ) {
-                for ( int index = 0; index < drawViewAdapter.getPointsCount(); index++ ) {
+                for ( int index = 0; index < getAdapterPointCount(); index++ ) {
                     drawPoint( index, canvas );
                 }
             } else {
@@ -99,7 +130,7 @@ public class DrawView extends View {
     }
 
     public boolean isAnimationTerminated() {
-        return currentPointPositionToDisplay >= getDrawViewAdapter().getPointsCount() - 1;
+        return currentPointPositionToDisplay >= getAdapterPointCount() - 1;
     }
 
     /**
@@ -119,12 +150,16 @@ public class DrawView extends View {
      */
     public void terminateAnimation() {
         handler.removeMessages( AnimatorHandler.ANIMATION_MESSAGE_ID );
-        currentPointPositionToDisplay = getDrawViewAdapter().getPointsCount() - 1;
+        currentPointPositionToDisplay = getAdapterPointCount() - 1;
         if ( animationListener != null ) {
             animationListener.onAnimationEnd( null );
         }
         refreshDrawableState();
         invalidate();
+    }
+    
+    private int getAdapterPointCount() {
+    	return drawViewAdapter == null ? 0 : drawViewAdapter.getPointsCount();
     }
 
     public void setDrawViewAdapter( DrawViewAdapter drawViewAdapter ) {
@@ -133,6 +168,15 @@ public class DrawView extends View {
 
     public DrawViewAdapter getDrawViewAdapter() {
         return drawViewAdapter;
+    }
+    
+    /**
+     * Supply the data to the Adapter.
+     * @see DefaultDrawViewAdapter
+     * @param listPoints - the data.
+     */
+    public void setDrawViewAdapterLabeledPoints(List< LabeledPoint > listPoints) {
+    	((DefaultDrawViewAdapter) drawViewAdapter).setListPoints(listPoints);
     }
 
     /**
@@ -197,15 +241,9 @@ public class DrawView extends View {
         handler = new AnimatorHandler( this, delayBetweenPoints );
     }
 
-    private void initUnderTextPaint() {
-        underTextPaint = new Paint();
-        underTextPaint.setColor( getResources().getColor( android.R.color.darker_gray ) );
-        underTextPaint.setAlpha( 150 );
-    }
-
     private void showNextPoint() {
 
-        if ( currentPointPositionToDisplay < getDrawViewAdapter().getPointsCount() - 1 ) {
+        if ( currentPointPositionToDisplay < getAdapterPointCount() - 1 ) {
             currentPointPositionToDisplay++;
 
             if ( isAnimationTerminated() && animationListener != null ) {
@@ -308,7 +346,29 @@ public class DrawView extends View {
         }
     }
 
-    /**
+    @Override
+	public boolean dispatchTouchEvent(MotionEvent event) {
+    	if (mTouchDispatchDelegate != null) {
+    		if (isTouchEventInLabeledPoint(event))
+    			return mTouchDispatchDelegate.sendTouchEvent(event);
+    	}
+    		
+    	return super.dispatchTouchEvent(event);
+	}
+
+	private boolean isTouchEventInLabeledPoint(MotionEvent event) {
+		return false;
+	}
+
+	public TouchDispatchDelegate getTouchDispatchDelegate() {
+		return mTouchDispatchDelegate;
+	}
+
+	public void setTouchDispatchDelegate(TouchDispatchDelegate touchDispatchDelegate) {
+		this.mTouchDispatchDelegate = touchDispatchDelegate;
+	}
+
+	/**
      * Animate the point to draw on screen.
      * 
      * @author sni

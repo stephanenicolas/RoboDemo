@@ -1,19 +1,18 @@
 package com.octo.android.robodemo;
 
-import static com.octo.android.robodemo.RoboDemo.BUNDLE_KEY_DEMO_ACTIVITY_ARRAY_LIST_POINTS;
-import static com.octo.android.robodemo.RoboDemo.BUNDLE_KEY_DEMO_ACTIVITY_ID;
 import static com.octo.android.robodemo.RoboDemo.SHARED_PREFERENCE_NAME;
 
 import java.util.ArrayList;
-import java.util.List;
-import android.app.Activity;
+
 import android.app.DialogFragment;
+import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.SharedPreferences.Editor;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -23,23 +22,19 @@ import android.view.animation.AnimationUtils;
 import android.widget.CheckBox;
 
 /**
- * Base class of DemoFragments. These Fragments demonstrate the usage of a given Activity. They are transparent and
- * will get displayed on top of the activity to demonstrate. They display a list of {@link LabeledPoint} inside a
- * {@link DrawView}.
+ * This Fragment demonstrates the usage of a given Activity.
+ * The default view is transparent and will be displayed on top of the activity being demonstrated.
+ * It displays a list of {@link LabeledPoint} inside a {@link DrawView}.
  * 
- * When subclassing this class, you only have to override {@link #getDrawViewAdapter()} and provide a custom
- * {@link DrawViewAdapter} that will act as model for the {@link DrawView}, giving it all data to draw both texts and
- * associated drawables at given locations.
- * 
- * To start subclasses of this Fragment, proceed as follow :
+ * To start this Fragment, proceed as follow :
  * 
  * <pre>
- * boolean neverShowDemoAgain = AbstractDemoFragment.isNeverShowAgain( this, demoActivityId );
+ * boolean neverShowDemoAgain = RoboDemo.isNeverShowAgain( this, demoFragmentId );
  * 
  * if ( !neverShowDemoAgain ) {
  *     //create an ArrayList<LabeledPoints> named arrayListPoints.
  * 
- *     DemoFragment f = new DemoFragment();
+ *     DemoFragment f = DemoFragment.newInstance(arrayListPoints);
  *     f.show(getFragmentManager(), DemoFragment.TAG);
  * }
  * </pre>
@@ -47,15 +42,29 @@ import android.widget.CheckBox;
  * @author ericharlow
  * 
  */
-public abstract class DemoFragment extends DialogFragment {
+public class DemoFragment extends DialogFragment {
 	
-	public static String TAG = "DemoFragment";
+	public static final String TAG = "DemoFragment";
+	public final static String DEMO_FRAGMENT_ID = "demo-main-fragment";
 	
-	private ArrayList< LabeledPoint > listPoints = null;
-    private String demoActivityId;
+	private ArrayList< LabeledPoint > listPoints;
+    private String demoFragmentId;
+    private int mResourceId;
 
     private DrawView drawView;
     private CheckBox checkBox;
+    
+    public static DemoFragment newInstance(ArrayList< LabeledPoint > arrayListPoints) {
+    	return newInstance(R.layout.fragment_demo, arrayListPoints);
+    }
+    
+    public static DemoFragment newInstance(int resource, ArrayList< LabeledPoint > arrayListPoints) {
+    	DemoFragment f = new DemoFragment();
+    	f.demoFragmentId = DEMO_FRAGMENT_ID;
+    	f.mResourceId = resource;
+    	f.listPoints = arrayListPoints;
+    	return f;
+    }
     
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -67,16 +76,25 @@ public abstract class DemoFragment extends DialogFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
-		View v = inflater.inflate(R.layout.fragment_demo, null);
+		View v = inflater.inflate(mResourceId, null);
 
-        drawView = (DrawView) v.findViewById( R.id.drawView_move_content_demo );
-        checkBox = (CheckBox) v.findViewById( R.id.checkbox_demo_never_again );
+		View temp = v.findViewById( R.id.drawView_move_content_demo );
+		if (temp != null)
+			drawView = (DrawView) temp;
         
-        View neverAgainText = v.findViewById(R.id.textview_demo_never_again);
-        neverAgainText.setOnClickListener(createDemoNeverAgainListener());
+		temp = v.findViewById( R.id.checkbox_demo_never_again );
+		if (temp != null)
+			checkBox = (CheckBox) temp;
+		
+		temp = v.findViewById(R.id.textview_demo_never_again);
+		if (temp != null)
+			temp.setOnClickListener(createDemoNeverAgainListener());
         
-        View finishButton = v.findViewById(R.id.button_demo_finish);
-        finishButton.setOnClickListener(createFinishButtonListener());
+        temp = v.findViewById(R.id.button_demo_finish);
+        if (temp != null)
+        	temp.setOnClickListener(createFinishButtonListener());
+        
+        //TODO: add delegate to provide custom listeners to the view
         
         return v;
 	}
@@ -85,47 +103,30 @@ public abstract class DemoFragment extends DialogFragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		
-		Bundle bundle = savedInstanceState != null ? savedInstanceState : getArguments();
-		
-		listPoints = bundle.getParcelableArrayList( BUNDLE_KEY_DEMO_ACTIVITY_ARRAY_LIST_POINTS );
-	    demoActivityId = bundle.getString( BUNDLE_KEY_DEMO_ACTIVITY_ID );
+		if (drawView == null)
+			return;
         
         drawView.setAnimationListener( new DrawViewAnimationListener() );
-        drawView.setDrawViewAdapter( getDrawViewAdapter() );
+        drawView.setDrawViewAdapterLabeledPoints(listPoints);
         drawView.setOnClickListener(createDrawViewListener());
+        
+        drawView.setTouchDispatchDelegate(new FragmentTouchDispatchDelegate());
 	}
 
-	protected DrawView getDrawView() {
-        return drawView;
-    }
-
-    @Override
-    public void onConfigurationChanged( Configuration newConfig ) {
-        super.onConfigurationChanged( newConfig );
-        // as most probably a layout change will change the underlying activity, just finish
-        // current demo activity's points are not relevant anymore.
-        finish(null);
-    }
-
     /**
-     * Must be overriden by any custom DemoActivity to provide a DrawViewAdapter to the {@link DrawView}.
-     * 
-     * @return an adapter that will be passed to the {@link DrawView}.
+     * Removes any previous fragment identified by the tag.
      */
-    public abstract DrawViewAdapter getDrawViewAdapter();
+	@Override
+	public void show(FragmentManager manager, String tag) {
+        Fragment prev = manager.findFragmentByTag(tag);
+        if (prev != null) {
+        	FragmentTransaction ft = manager.beginTransaction();
+            ft.remove(prev).commit();
+        }
+		super.show(manager, tag);
+	}
 
-    protected List< LabeledPoint > getListPoints() {
-        return listPoints;
-    }
-
-    @Override
-	public void onSaveInstanceState( Bundle outState ) {
-        outState.putParcelableArrayList( BUNDLE_KEY_DEMO_ACTIVITY_ARRAY_LIST_POINTS, listPoints );
-        outState.putString( BUNDLE_KEY_DEMO_ACTIVITY_ID, demoActivityId );
-        super.onSaveInstanceState( outState );
-    }
-
-    public void onTap( View view ) {
+	public void onTap( View view ) {
         if ( drawView.isAnimationTerminated() ) {
             drawView.resetAnimation();
         } else {
@@ -138,18 +139,27 @@ public abstract class DemoFragment extends DialogFragment {
     }
 
     public void finish( View view ) {
+    	//TODO: move shared preferences implementation to RoboDemo
         Editor editor = getActivity().getSharedPreferences( SHARED_PREFERENCE_NAME, Context.MODE_PRIVATE ).edit();
         if ( checkBox.isChecked() ) {
-            editor = editor.putBoolean( demoActivityId, true );
+            editor = editor.putBoolean( demoFragmentId, true );
         } else {
-            editor = editor.remove( demoActivityId );
+            editor = editor.remove( demoFragmentId );
         }
         editor.commit();
-        removeSelf(getActivity());
+        
+        removeSelf();
     }
 
     private void setButtonsVisible( boolean visible ) {
-        final View layoutButtons = getView().findViewById( R.id.layout_demo_buttons );
+    	View view = getView();
+    	if (view == null)
+    		return;
+    	
+        final View layoutButtons = view.findViewById( R.id.layout_demo_buttons );
+        if (layoutButtons == null)
+        	return;
+        
         int animationResId = visible ? android.R.anim.fade_in : android.R.anim.fade_out;
         Animation animation = AnimationUtils.loadAnimation( getActivity(), animationResId );
         animation.setDuration( getResources().getInteger( android.R.integer.config_shortAnimTime ) );
@@ -157,14 +167,21 @@ public abstract class DemoFragment extends DialogFragment {
         layoutButtons.startAnimation( animation );
     }
     
-    private boolean removeSelf(Activity act) {
-		if (act == null) return false;
-		FragmentManager fManager = act.getFragmentManager();
+    private boolean removeSelf() {
+		FragmentManager fManager = getFragmentManager();
 		fManager.beginTransaction().remove(this).commit();
 		return true;
 	}
     
-    private OnClickListener createDrawViewListener() {
+    public String getDemoFragmentId() {
+		return demoFragmentId;
+	}
+
+	public void setDemoFragmentId(String demoFragmentId) {
+		this.demoFragmentId = demoFragmentId;
+	}
+
+	private OnClickListener createDrawViewListener() {
 		return new OnClickListener() {
 			
 			@Override
@@ -240,6 +257,23 @@ public abstract class DemoFragment extends DialogFragment {
         public void onAnimationEnd( Animation animation ) {
             layoutButtons.setVisibility( visibleAtEnd ? View.VISIBLE : View.GONE );
         }
+    }
+    
+    /**
+     * Gives the Context for the {@link TouchDispatchDelegate}.
+     * @author ericharlow
+     */
+    private class FragmentTouchDispatchDelegate implements TouchDispatchDelegate {
+
+		@Override
+		public boolean sendTouchEvent(MotionEvent event) {
+			View v = getActivity().getWindow().getDecorView();
+			if (v != null)
+				return v.dispatchTouchEvent(event);
+			else
+				return false;
+		}
+    	
     }
 
 }

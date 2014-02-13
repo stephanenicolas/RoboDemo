@@ -1,7 +1,9 @@
 package com.octo.android.robodemo;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Point;
@@ -39,20 +41,17 @@ public class DefaultDrawViewAdapter implements DrawViewAdapter {
     private Context context;
 
     public DefaultDrawViewAdapter( Context context, List< LabeledPoint > listPoints ) {
-        this.context = context;
-        this.drawable = context.getResources().getDrawable( R.drawable.ic_lockscreen_handle_pressed );
-        this.textPaint = initializeDefaultTextPaint();
-        this.listPoints = listPoints;
-
-        initialize();
-
+    	this(context, 
+    			context.getResources().getDrawable( R.drawable.ic_lockscreen_handle_pressed ), 
+    			initializeDefaultTextPaint(context), 
+    			listPoints);
     }
 
     public DefaultDrawViewAdapter( Context context, Drawable drawable, TextPaint textPaint, List< LabeledPoint > listPoints ) {
         this.context = context;
         this.drawable = drawable;
         this.textPaint = textPaint;
-        this.listPoints = listPoints;
+        this.listPoints = listPoints != null ? listPoints : new ArrayList< LabeledPoint >(0);
 
         initialize();
 
@@ -62,16 +61,17 @@ public class DefaultDrawViewAdapter implements DrawViewAdapter {
         return context;
     }
 
-    private TextPaint initializeDefaultTextPaint() {
+    private static TextPaint initializeDefaultTextPaint(Context context) {
         TextPaint textPaint = new TextPaint();
-        textPaint.setColor( getContext().getResources().getColor( android.R.color.white ) );
+        textPaint.setColor( context.getResources().getColor( android.R.color.white ) );
         textPaint.setShadowLayer( 2.0f, 0, 2.0f, android.R.color.black );
         // http://stackoverflow.com/questions/3061930/how-to-set-unit-for-paint-settextsize
-        textPaint.setTextSize( TypedValue.applyDimension( TypedValue.COMPLEX_UNIT_DIP, DEFAULT_FONT_SIZE, getContext().getResources().getDisplayMetrics() ) );
+        textPaint.setTextSize( TypedValue.applyDimension( TypedValue.COMPLEX_UNIT_DIP, DEFAULT_FONT_SIZE, context.getResources().getDisplayMetrics() ) );
         return textPaint;
     }
 
-    @SuppressWarnings("deprecation")
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
+	@SuppressWarnings("deprecation")
     private void initialize() {
         WindowManager wm = (WindowManager) context.getSystemService( Context.WINDOW_SERVICE );
         Display display = wm.getDefaultDisplay();
@@ -94,21 +94,32 @@ public class DefaultDrawViewAdapter implements DrawViewAdapter {
 
     @Override
     public int getPointsCount() {
-        return listPoints.size();
+        return listPoints == null ? 0 : listPoints.size();
     }
 
     @Override
-    public Drawable getDrawableAt( int position ) {
-        Point point = listPoints.get( position );
+    public Drawable getDrawableAt( int position ) {   	
+        Point point = getListPoint(position);
         int width = drawable.getIntrinsicWidth();
         int height = drawable.getIntrinsicHeight();
         drawable.setBounds( point.x - width / 2, point.y - height / 2, point.x + width / 2, point.y + height / 2 );
         return drawable;
     }
+    
+    public void setListPoints(List< LabeledPoint > listPoints) {
+    	this.listPoints = listPoints;
+    }
+
+	private LabeledPoint getListPoint(int position) {
+		if (position < 0 || listPoints == null || position >= listPoints.size()) {
+			return new LabeledPoint();
+    	}
+		return listPoints.get( position );
+	}
 
     @Override
     public Layout getTextLayoutAt( int position ) {
-        String text = listPoints.get( position ).getText();
+        String text = getListPoint(position).getText();
         Rect bounds = new Rect();
         textPaint.getTextBounds( text, 0, text.length(), bounds );
 
@@ -121,7 +132,7 @@ public class DefaultDrawViewAdapter implements DrawViewAdapter {
     public Point getTextPointAt( int position ) {
         Drawable drawable = getDrawableAt( position );
         Layout textLayout = getTextLayoutAt( position );
-        Point point = listPoints.get( position );
+        Point point = getListPoint(position);
         final int marginX = drawable.getIntrinsicWidth() / 4 + margin;
         final int marginY = drawable.getIntrinsicHeight() / 4 + margin;
         int textX = point.x > screenWidth / 2 ? point.x - marginX - textLayout.getWidth() : point.x + marginX;

@@ -4,6 +4,7 @@ RoboDemo
 RoboDemo is a ShowCase library for Android to demonstrate to users how a given Activity works.
 
 A sample is available in the [download area](https://github.com/stephanenicolas/RoboDemo/downloads) of the repository.
+It looks like the [download areas feature](https://github.com/blog/1302-goodbye-uploads) has been deprecated.
 
 Screenshots 
 -----------
@@ -29,16 +30,16 @@ There are some cases where applications require more complex interactions from u
 or new interactions not covered by Android UI Guidelines.
 
 RoboDemo eases creating showcases / explaining / demonstrating of such activities to users.
-It will display an overlay activity to illustrate the `Activity` under showcase. The explanations consist of a serie of
+It will display an overlay to illustrate the `Activity` under showcase. The explanations consist of a series of
 points to click on and their associated labels. The  `Activity` under showcase is dimmed and the showcase highlights
 transparent areas to point views or positions users have to click.
 
-Creation of `DemoActivity` is straightforward, have a look at the sample to put in place RoboDemo in your own app :
+Creation of `DemoFragment` is straightforward, have a look at the sample to put in place RoboDemo in your own app :
 
-1. create a `DemoActivity`, using a custom `DrawAdapter`
+1. create a `DemoFragment`, use a custom xml layout
 2. in the `Activity` undershowcase, pass views or coordinates and their associated labels. 
 
-RoboDemo has been designed to be convinient.
+RoboDemo has been designed to be convenient.
 
 To learn more, visit [RoboDemo Starter Guide](https://github.com/stephanenicolas/RoboDemo/wiki/RoboDemo-Starter-Guide) and [browse RoboDemo Javadocs online](http://stephanenicolas.github.com/RoboDemo/apidocs/index.html).
 
@@ -53,17 +54,6 @@ RoboDemo can be customized in different ways :
 * and some more for sure...
 
 To learn more, visit [RoboDemo Starter Guide](https://github.com/stephanenicolas/RoboDemo/wiki/RoboDemo-Starter-Guide) and [browse RoboDemo Javadocs online](http://stephanenicolas.github.com/RoboDemo/apidocs/index.html).
-
-
-Know limitations
-----------------
-
-The base class for DemoActivity is based on `android.app.Activity`. Unfortunately, this can't cover all inheritance cases for projects
-based on ActionBarSherlock or RoboGuice or a custom Activity base class per project.
-
-In that case, we recommend using all classes from the library as well but rewrite your own `DemoActivity` changing only its super class.
-
-In the case you use ActionBarSherlock, check the code comments, they will give you hints to support ActionBarSherlock themes.
 
 Modules 
 -------
