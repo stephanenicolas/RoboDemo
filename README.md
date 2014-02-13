@@ -41,7 +41,7 @@ Creation of `DemoFragment` is straightforward, have a look at the sample to put 
 
 RoboDemo has been designed to be convenient.
 
-To learn more, visit [RoboDemo Starter Guide](https://github.com/stephanenicolas/RoboDemo/wiki/RoboDemo-Starter-Guide) and [browse RoboDemo Javadocs online](http://stephanenicolas.github.com/RoboDemo/apidocs/index.html).
+To learn more, visit [RoboDemo Fragment Starter Guide](https://github.com/ericharlow/RoboDemo/wiki/RoboDemo-FragmentStarterGuide) and [browse RoboDemo Javadocs online](http://stephanenicolas.github.com/RoboDemo/apidocs/index.html).
 
 Customization 
 -------------
@@ -53,7 +53,7 @@ RoboDemo can be customized in different ways :
 * using custom drawable and text locations
 * and some more for sure...
 
-To learn more, visit [RoboDemo Starter Guide](https://github.com/stephanenicolas/RoboDemo/wiki/RoboDemo-Starter-Guide) and [browse RoboDemo Javadocs online](http://stephanenicolas.github.com/RoboDemo/apidocs/index.html).
+To learn more, visit [RoboDemo Fragment Starter Guide](https://github.com/ericharlow/RoboDemo/wiki/RoboDemo-FragmentStarterGuide) and [browse RoboDemo Javadocs online](http://stephanenicolas.github.com/RoboDemo/apidocs/index.html).
 
 Modules 
 -------
