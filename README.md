@@ -2,9 +2,7 @@ RoboDemo
 ========
 
 RoboDemo is a ShowCase library for Android to demonstrate to users how a given Activity works.
-
-A sample is available in the [download area](https://github.com/stephanenicolas/RoboDemo/downloads) of the repository.
-It looks like the [download areas feature](https://github.com/blog/1302-goodbye-uploads) has been deprecated.
+Additionally use RoboDemo to walk a user through a first time introduction to the app or show them how to use a new feature.
 
 Screenshots 
 -----------
@@ -34,12 +32,12 @@ It will display an overlay to illustrate the `Activity` under showcase. The expl
 points to click on and their associated labels. The  `Activity` under showcase is dimmed and the showcase highlights
 transparent areas to point views or positions users have to click.
 
-Creation of `DemoFragment` is straightforward, have a look at the sample to put in place RoboDemo in your own app :
+Creation of `DemoFragment` is straightforward, have a look at the sample to put RoboDemo in your own app :
 
 1. create a `DemoFragment`, use a custom xml layout
 2. in the `Activity` undershowcase, pass views or coordinates and their associated labels. 
 
-RoboDemo has been designed to be convenient.
+RoboDemo can also walk a user through your own app. Great for first time use or explaining a feature that is not used often. Look in the sample to see how to switch from a showcase to a walkthrough.
 
 To learn more, visit [RoboDemo Fragment Starter Guide](https://github.com/ericharlow/RoboDemo/wiki/RoboDemo-FragmentStarterGuide) and [browse RoboDemo Javadocs online](http://stephanenicolas.github.com/RoboDemo/apidocs/index.html).
 
