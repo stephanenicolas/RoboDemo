@@ -7,4 +7,9 @@
     <string name="text_clear">Clear</string>
     <string name="text_move_demo_step_1">Clear the list by clicking this button</string>
     <string name="text_move_demo_step_2">Refresh the list using this menu item</string>
+    <string name="text_move_demo_step_3">Tap an item to see it\'s details</string>
+    <string name="text_move_demo_step_4">Tap back to return to the list</string>
+    <string name="text_move_demo_step_5">Tap here to restart the demo</string>
+    <string name="text_move_demo_step_6">Tap here to end the demo</string>
+    <string name="text_intro">This is a walkthrough of the application.\n Tap in the center of the circle to move to the next point.</string>
 </resources>

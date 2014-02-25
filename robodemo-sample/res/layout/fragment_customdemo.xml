@@ -12,7 +12,7 @@
         android:layout_weight="1"
         android:background="@android:color/transparent"
         app:drawable="@drawable/ic_lockscreen_handle_pressed"
-        app:handlerType="AnimationHandler"
+        app:handlerType="TouchHandler"
         app:isDrawingOnePointAtATime="true"
         app:isShowingAllPointsAtTheEndOfAnimation="false"
         app:shadowLayerBlurRadius="2.0"
@@ -28,7 +28,7 @@
         android:id="@+id/layout_demo_buttons"
         android:layout_width="fill_parent"
         android:layout_height="40dp"
-        android:background="@android:color/black"
+        android:background="#44000000"
         android:visibility="gone" >
 
         <CheckBox

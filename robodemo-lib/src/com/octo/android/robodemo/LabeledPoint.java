@@ -1,5 +1,7 @@
 package com.octo.android.robodemo;
 
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
@@ -8,6 +10,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.view.Display;
 import android.view.View;
+import android.view.View.OnLayoutChangeListener;
 
 /**
  * A pojo class that wraps all information needed to display a point on screen. {@link LabeledPoint} embed a position
@@ -16,7 +19,7 @@ import android.view.View;
  * Activity to illustrate and the {@link DemoActivity}.
  * 
  * @author sni
- * 
+ * @author ericharlow
  */
 public class LabeledPoint extends Point implements Parcelable {
 
@@ -27,6 +30,7 @@ public class LabeledPoint extends Point implements Parcelable {
      * Creates an empty {@link LabeledPoint}.
      */
     public LabeledPoint() {
+    	text="";
     }
 
     /**
@@ -99,7 +103,7 @@ public class LabeledPoint extends Point implements Parcelable {
      *            the new text of the point.
      */
     public LabeledPoint( View v, String text ) {
-        this( v, 50, 0, text );
+        this( v, 50, 50, text );
     }
 
     /**
@@ -132,12 +136,31 @@ public class LabeledPoint extends Point implements Parcelable {
      * @param text
      *            the new text of the point.
      */
-    public LabeledPoint( View v, float widthPercent, float heightPercent, String text ) {
-        int[] location = new int[ 2 ];
-        v.getLocationOnScreen( location );
-        this.x = location[ 0 ] + Math.round( widthPercent * v.getMeasuredWidth() / 100 );
-        this.y = location[ 1 ] + Math.round( heightPercent * v.getMeasuredHeight() / 100 );
+    public LabeledPoint( View v, final float widthPercent, final float heightPercent, String text ) {
+        if (v != null) {
+        	setMeasuredLocation(widthPercent, heightPercent, v);
+        	v.addOnLayoutChangeListener(new OnLayoutChangeListener() {
+				
+				@Override
+				public void onLayoutChange(View v, int left, int top, int right,
+						int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+					setMeasuredLocation(widthPercent, heightPercent, v);
+		            v.removeOnLayoutChangeListener(this);
+				}
+			});
+        }
         setText( text );
+    }
+    
+    /**
+     * Creates a {@link LabeledPoint} positioned relatively to a given activity, with a given text.
+     * @param activity - the view on which to center the point.
+     * @param widthPercent - the percent of the view width at which to place the new point.
+     * @param heightPercent - the percent of the view height at which to place the new point.
+     * @param stringID - reference to the new text of the point.
+     */
+    public LabeledPoint(Activity activity, float widthPercent, float heightPercent, int stringID) {
+    	this(activity, widthPercent, heightPercent, activity.getString(stringID));
     }
 
     /**
@@ -154,7 +177,8 @@ public class LabeledPoint extends Point implements Parcelable {
      * @param text
      *            the new text of the point.
      */
-    @SuppressWarnings("deprecation")
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
+	@SuppressWarnings("deprecation")
     public LabeledPoint( Activity activity, float widthPercent, float heightPercent, String text ) {
 
         Display display = activity.getWindowManager().getDefaultDisplay();
@@ -189,6 +213,28 @@ public class LabeledPoint extends Point implements Parcelable {
     public LabeledPoint( Activity activity, float widthPercent, float heightPercent ) {
         this( activity, widthPercent, heightPercent, null );
     }
+    
+    /**
+     * Creates a {@link LabeledPoint} located at the center of a given view, with a given text.
+     * @param activity - the context for the view.
+     * @param referenceID - the resource id for the view.
+     * @param stringID - the resource id for the string.
+     */
+    public LabeledPoint(Activity activity, int referenceID, int stringID) {
+    	this(activity.findViewById(referenceID), activity.getString(stringID));
+    }
+    
+    /**
+     * Creates a {@link LabeledPoint} positioned relatively to a given view, with a given text.
+     * @param activity - the context for the view.
+     * @param widthPercent - the percent of the view width at which to place the new point.
+     * @param heightPercent - the percent of the view height at which to place the new point.
+     * @param referenceID - the resource id for the view.
+     * @param stringID - the resource id for the string.
+     */
+    public LabeledPoint(Activity activity, float widthPercent, float heightPercent, int referenceID, int stringID) {
+    	this(activity.findViewById(referenceID), widthPercent, heightPercent, activity.getString(stringID));
+    }
 
     public String getText() {
         return text;
@@ -218,7 +264,8 @@ public class LabeledPoint extends Point implements Parcelable {
         /**
          * Return a new point from the data in the specified parcel.
          */
-        @Override
+        @SuppressLint("NewApi")
+		@Override
         public LabeledPoint createFromParcel( Parcel in ) {
             LabeledPoint r = new LabeledPoint();
             r.readFromParcel( in );
@@ -241,10 +288,17 @@ public class LabeledPoint extends Point implements Parcelable {
      * @param in
      *            The parcel to read the point's coordinates from
      */
-    @Override
     public void readFromParcel( Parcel in ) {
         x = in.readInt();
         y = in.readInt();
         text = in.readString();
     }
+
+	private void setMeasuredLocation(final float widthPercent,
+			final float heightPercent, View v) {
+		int[] location = new int[ 2 ];
+		v.getLocationOnScreen( location );
+		x = location[ 0 ] + Math.round( widthPercent * v.getMeasuredWidth() / 100 );
+		y = location[ 1 ] + Math.round( heightPercent * v.getMeasuredHeight() / 100 );
+	}
 }

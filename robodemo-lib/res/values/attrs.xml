@@ -27,5 +27,12 @@
         <attr name="isShowingAllPointsAtTheEndOfAnimation" format="boolean" />
         <!-- Delay between points in animation in ms -->
         <attr name="delayBetweenPoints" format="integer" />
+        <!-- Type of handler to use -->
+        <attr name="handlerType" format="enum">
+            <!-- Showcase -->
+        	<enum name="AnimationHandler" value="1" />
+        	<!-- Walkthrough -->
+        	<enum name="TouchHandler" value="2" />
+    	</attr>
     </declare-styleable>
 </resources>

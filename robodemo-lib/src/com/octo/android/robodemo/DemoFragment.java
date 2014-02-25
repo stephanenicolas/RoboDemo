@@ -1,15 +1,11 @@
 package com.octo.android.robodemo;
 
-import static com.octo.android.robodemo.RoboDemo.SHARED_PREFERENCE_NAME;
-
 import java.util.ArrayList;
 
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.Context;
-import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -23,7 +19,7 @@ import android.widget.CheckBox;
 
 /**
  * This Fragment demonstrates the usage of a given Activity.
- * The default view is transparent and will be displayed on top of the activity being demonstrated.
+ * The default view is semi-transparent and will be displayed on top of the activity being demonstrated.
  * It displays a list of {@link LabeledPoint} inside a {@link DrawView}.
  * 
  * To start this Fragment, proceed as follow :
@@ -46,6 +42,7 @@ public class DemoFragment extends DialogFragment {
 	
 	public static final String TAG = "DemoFragment";
 	public final static String DEMO_FRAGMENT_ID = "demo-main-fragment";
+	public final static String DEMO_FRAGMENT_SHOW = "demo-fragment-show";
 	
 	private ArrayList< LabeledPoint > listPoints;
     private String demoFragmentId;
@@ -54,10 +51,22 @@ public class DemoFragment extends DialogFragment {
     private DrawView drawView;
     private CheckBox checkBox;
     
+    /**
+     * Create a DemoFragment using a list of LabeledPoints.
+     * @param arrayListPoints - list of LabeledPoints to show.
+     * @return The DemoFragment.
+     */
     public static DemoFragment newInstance(ArrayList< LabeledPoint > arrayListPoints) {
     	return newInstance(R.layout.fragment_demo, arrayListPoints);
     }
     
+    /**
+     * Create a customized DemoFragment with a xml layout and supplied list of LabeledPoints.
+     * @param resource - custom layout.
+     * @param arrayListPoints - list of LabeledPoints to show.
+     * @return The DemoFragment.
+     * @see DrawView
+     */
     public static DemoFragment newInstance(int resource, ArrayList< LabeledPoint > arrayListPoints) {
     	DemoFragment f = new DemoFragment();
     	f.demoFragmentId = DEMO_FRAGMENT_ID;
@@ -76,11 +85,16 @@ public class DemoFragment extends DialogFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
+		if (mResourceId == 0) {
+			mResourceId = savedInstanceState.getInt(DEMO_FRAGMENT_ID);
+		}
+		
 		View v = inflater.inflate(mResourceId, null);
 
 		View temp = v.findViewById( R.id.drawView_move_content_demo );
-		if (temp != null)
+		if (temp != null) {
 			drawView = (DrawView) temp;
+		}			
         
 		temp = v.findViewById( R.id.checkbox_demo_never_again );
 		if (temp != null)
@@ -94,7 +108,7 @@ public class DemoFragment extends DialogFragment {
         if (temp != null)
         	temp.setOnClickListener(createFinishButtonListener());
         
-        //TODO: add delegate to provide custom listeners to the view
+        //TODO: add a delegate, and provide the view for custom listeners to be added
         
         return v;
 	}
@@ -108,8 +122,6 @@ public class DemoFragment extends DialogFragment {
         
         drawView.setAnimationListener( new DrawViewAnimationListener() );
         drawView.setDrawViewAdapterLabeledPoints(listPoints);
-        drawView.setOnClickListener(createDrawViewListener());
-        
         drawView.setTouchDispatchDelegate(new FragmentTouchDispatchDelegate());
 	}
 
@@ -126,28 +138,32 @@ public class DemoFragment extends DialogFragment {
 		super.show(manager, tag);
 	}
 
-	public void onTap( View view ) {
-        if ( drawView.isAnimationTerminated() ) {
-            drawView.resetAnimation();
-        } else {
-            drawView.terminateAnimation();
-        }
-    }
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		outState.putInt(DEMO_FRAGMENT_ID, mResourceId);
+		super.onSaveInstanceState(outState);
+	}
+
+//	public void onTap( View view ) {
+//        if ( drawView.isAnimationTerminated() ) {
+//            drawView.resetAnimation();
+//        } else {
+//            drawView.terminateAnimation();
+//        }
+//    }
 
     public void checkNeverShowAgain( View view ) {
         checkBox.setChecked( !checkBox.isChecked() );
     }
 
     public void finish( View view ) {
-    	//TODO: move shared preferences implementation to RoboDemo
-        Editor editor = getActivity().getSharedPreferences( SHARED_PREFERENCE_NAME, Context.MODE_PRIVATE ).edit();
         if ( checkBox.isChecked() ) {
-            editor = editor.putBoolean( demoFragmentId, true );
+            RoboDemo.setNeverShowAgain(getActivity(), demoFragmentId, true);
         } else {
-            editor = editor.remove( demoFragmentId );
+        	RoboDemo.showAgain(getActivity(), demoFragmentId);
         }
-        editor.commit();
         
+        RoboDemo.setShowDemo(getActivity(), DemoFragment.DEMO_FRAGMENT_SHOW, false);       
         removeSelf();
     }
 
@@ -179,16 +195,6 @@ public class DemoFragment extends DialogFragment {
 
 	public void setDemoFragmentId(String demoFragmentId) {
 		this.demoFragmentId = demoFragmentId;
-	}
-
-	private OnClickListener createDrawViewListener() {
-		return new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				onTap(v);
-			}
-		};
 	}
     
     private OnClickListener createFinishButtonListener() {

@@ -40,7 +40,7 @@ public class DrawView extends View {
     private static final long DELAY_BETWEEN_POINTS = 2000;
 
     private DrawViewAdapter drawViewAdapter;
-
+    private int handlerType;
     private AnimatorHandler handler;
     private int currentPointPositionToDisplay = 0;
     private long delayBetweenPoints;
@@ -75,17 +75,16 @@ public class DrawView extends View {
             drawViewAdapter = new DefaultDrawViewAdapter(context, drawable, textPaint, null);
             
             underTextPaint = new Paint();
-            underTextPaint.setColor( a.getColor(R.styleable.DrawView_underTextPaintColor, Color.DKGRAY));//context.getResources().getColor(android.R.color.darker_gray)
+            underTextPaint.setColor( a.getColor(R.styleable.DrawView_underTextPaintColor, Color.DKGRAY));
             underTextPaint.setAlpha( a.getInt(R.styleable.DrawView_underTextPaintAlpha, 150) );
             
             isShowingAllPointsAtTheEndOfAnimation = a.getBoolean(R.styleable.DrawView_isShowingAllPointsAtTheEndOfAnimation, true);
             isDrawingOnePointAtATime = a.getBoolean(R.styleable.DrawView_isDrawingOnePointAtATime, false);
             delayBetweenPoints = a.getInt(R.styleable.DrawView_delayBetweenPoints, (int) DELAY_BETWEEN_POINTS);
-            
+            handlerType = a.getInt(R.styleable.DrawView_handlerType, 1);
+            initializeHandler(handlerType);
             a.recycle();
           }
-        
-        initializeHandler();
     }
 
 	public DrawView( Context context, AttributeSet attrs ) {
@@ -187,7 +186,8 @@ public class DrawView extends View {
      */
     public void setDelayBetweenPoints( long delayBetweenPoints ) {
         this.delayBetweenPoints = delayBetweenPoints;
-        initializeHandler();
+        handlerType = 1;
+        initializeHandler(handlerType);
     }
 
     public long getDelayBetweenPoints() {
@@ -237,8 +237,14 @@ public class DrawView extends View {
         return animationListener;
     }
 
-    private void initializeHandler() {
-        handler = new AnimatorHandler( this, delayBetweenPoints );
+    private void initializeHandler(int type) {
+    	handler = new AnimatorHandler( this, delayBetweenPoints ); // since there are no null checks for handler
+   
+		if (type == 1) {
+			handler.sendEmptyMessageDelayed();
+		} else if (type == 2) {
+			
+		}  
     }
 
     private void showNextPoint() {
@@ -349,15 +355,30 @@ public class DrawView extends View {
     @Override
 	public boolean dispatchTouchEvent(MotionEvent event) {
     	if (mTouchDispatchDelegate != null) {
-    		if (isTouchEventInLabeledPoint(event))
+    		if (isTouchHandler() && isTouchEventInLabeledPoint(event, drawViewAdapter.getDrawableAt( currentPointPositionToDisplay ))) {
+    			if (event.getAction() == MotionEvent.ACTION_UP)
+    				showNextPoint();
     			return mTouchDispatchDelegate.sendTouchEvent(event);
+    		}	
     	}
     		
     	return super.dispatchTouchEvent(event);
 	}
 
-	private boolean isTouchEventInLabeledPoint(MotionEvent event) {
-		return false;
+	private boolean isTouchHandler() {
+		return handlerType == 2;
+	}
+
+	private boolean isTouchEventInLabeledPoint(MotionEvent event, Drawable drawable) {
+		float x = event.getX();
+		float y = event.getY();
+		int center_x = drawable.getBounds().centerX();
+		int center_y = drawable.getBounds().centerY();
+		int radius = drawable.getIntrinsicWidth() / 2 - 3;
+		
+		//change < to <= to include points on circle
+		boolean result = Math.pow((x - center_x), 2) + Math.pow((y - center_y), 2) < Math.pow(radius, 2);
+		return result;
 	}
 
 	public TouchDispatchDelegate getTouchDispatchDelegate() {
@@ -383,7 +404,10 @@ public class DrawView extends View {
         private AnimatorHandler( DrawView drawView, long delayBetweenPoints ) {
             this.weakReference = new WeakReference< DrawView >( drawView );
             this.delayBetweenPoints = delayBetweenPoints;
-            sendEmptyMessageDelayed( AnimatorHandler.ANIMATION_MESSAGE_ID, delayBetweenPoints );
+        }
+        
+        public void sendEmptyMessageDelayed() {
+        	sendEmptyMessageDelayed( AnimatorHandler.ANIMATION_MESSAGE_ID, delayBetweenPoints );
         }
 
         @Override
