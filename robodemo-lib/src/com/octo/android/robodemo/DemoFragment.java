@@ -2,13 +2,18 @@ package com.octo.android.robodemo;
 
 import java.util.ArrayList;
 
+import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnKeyListener;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
+import android.view.Surface;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -112,7 +117,7 @@ public class DemoFragment extends DialogFragment {
         
         return v;
 	}
-	
+
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
@@ -144,20 +149,29 @@ public class DemoFragment extends DialogFragment {
 		super.onSaveInstanceState(outState);
 	}
 
-//	public void onTap( View view ) {
-//        if ( drawView.isAnimationTerminated() ) {
-//            drawView.resetAnimation();
-//        } else {
-//            drawView.terminateAnimation();
-//        }
-//    }
+    @Override
+	public Dialog onCreateDialog(Bundle savedInstanceState) {
+    	Dialog dialog = super.onCreateDialog(savedInstanceState);
+    	dialog.setOnKeyListener(new OnKeyListener() {
+			
+			@Override
+			public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+				if( keyCode == KeyEvent.KEYCODE_BACK){
+					finish(null);// need to take care of our mess and state
+	                return true;
+	            }
+	            return false;
+			}
+		});
+		return dialog;
+	}
 
-    public void checkNeverShowAgain( View view ) {
+	public void checkNeverShowAgain( View view ) {
         checkBox.setChecked( !checkBox.isChecked() );
     }
 
     public void finish( View view ) {
-        if ( checkBox.isChecked() ) {
+        if ( checkBox != null && checkBox.isChecked() ) {
             RoboDemo.setNeverShowAgain(getActivity(), demoFragmentId, true);
         } else {
         	RoboDemo.showAgain(getActivity(), demoFragmentId);

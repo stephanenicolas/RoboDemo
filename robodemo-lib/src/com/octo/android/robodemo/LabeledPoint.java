@@ -225,6 +225,18 @@ public class LabeledPoint extends Point implements Parcelable {
     }
     
     /**
+     * Creates a {@link LabeledPoint} at a given location, with a null text.
+     * 
+     * @param activity - the view on which to center the point.
+     * @param x - the new x coordinate of the point.
+     * @param y - the new y coordinate of the point.
+     * @param stringID - reference to the new text of the point.
+     */
+    public LabeledPoint(Activity activity, int x, int y, int stringID ) {
+        this( x, y, activity.getString(stringID) );
+    }
+    
+    /**
      * Creates a {@link LabeledPoint} positioned relatively to a given view, with a given text.
      * @param activity - the context for the view.
      * @param widthPercent - the percent of the view width at which to place the new point.
