@@ -354,19 +354,24 @@ public class DrawView extends View {
 
     @Override
 	public boolean dispatchTouchEvent(MotionEvent event) {
-    	if (mTouchDispatchDelegate != null) {
-    		if (isTouchHandler() && isTouchEventInLabeledPoint(event, drawViewAdapter.getDrawableAt( currentPointPositionToDisplay ))) {
+    	if (isTouchHandler() && isTouchEventInLabeledPoint(event, drawViewAdapter.getDrawableAt( currentPointPositionToDisplay ))) {
     			if (event.getAction() == MotionEvent.ACTION_UP)
     				showNextPoint();
-    			return mTouchDispatchDelegate.sendTouchEvent(event);
-    		}	
+    			if (mTouchDispatchDelegate != null)
+    				return mTouchDispatchDelegate.sendTouchEvent(event);
+    			else
+    				return true;
     	}
     		
     	return super.dispatchTouchEvent(event);
 	}
 
 	private boolean isTouchHandler() {
-		return handlerType == 2;
+		return handlerType == 2 || isTouchDrivenAnimationHandler();
+	}
+	
+	private boolean isTouchDrivenAnimationHandler() {
+		return handlerType == 3;
 	}
 
 	private boolean isTouchEventInLabeledPoint(MotionEvent event, Drawable drawable) {
@@ -386,7 +391,8 @@ public class DrawView extends View {
 	}
 
 	public void setTouchDispatchDelegate(TouchDispatchDelegate touchDispatchDelegate) {
-		this.mTouchDispatchDelegate = touchDispatchDelegate;
+		if (!isTouchDrivenAnimationHandler())
+			this.mTouchDispatchDelegate = touchDispatchDelegate;
 	}
 
 	/**

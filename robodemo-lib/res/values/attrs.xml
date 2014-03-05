@@ -33,6 +33,8 @@
         	<enum name="AnimationHandler" value="1" />
         	<!-- Walkthrough -->
         	<enum name="TouchHandler" value="2" />
+        	<!-- Touch Driven Showcase -->
+        	<enum name="TouchAnimationHandler" value="3" />
     	</attr>
     </declare-styleable>
 </resources>
