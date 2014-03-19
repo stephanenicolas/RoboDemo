@@ -9,11 +9,13 @@ import android.content.res.Configuration;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.text.Layout;
 import android.text.Layout.Alignment;
 import android.text.StaticLayout;
 import android.text.TextPaint;
+import android.text.style.DrawableMarginSpan;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.WindowManager;
@@ -42,7 +44,7 @@ public class DefaultDrawViewAdapter implements DrawViewAdapter {
 
     public DefaultDrawViewAdapter( Context context, List< LabeledPoint > listPoints ) {
     	this(context, 
-    			context.getResources().getDrawable( R.drawable.ic_lockscreen_handle_pressed ), 
+    			initializeDefaultDrawable(context), 
     			initializeDefaultTextPaint(context), 
     			listPoints);
     }
@@ -69,6 +71,10 @@ public class DefaultDrawViewAdapter implements DrawViewAdapter {
         textPaint.setTextSize( TypedValue.applyDimension( TypedValue.COMPLEX_UNIT_DIP, DEFAULT_FONT_SIZE, context.getResources().getDisplayMetrics() ) );
         return textPaint;
     }
+    
+    private static Drawable initializeDefaultDrawable(Context context) {
+		return context.getResources().getDrawable( R.drawable.ic_lockscreen_handle );
+	}
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
 	@SuppressWarnings("deprecation")
@@ -99,11 +105,22 @@ public class DefaultDrawViewAdapter implements DrawViewAdapter {
 
     @Override
     public Drawable getDrawableAt( int position ) {   	
-        Point point = getListPoint(position);
+        LabeledPoint point = getListPoint(position);
         int width = drawable.getIntrinsicWidth();
         int height = drawable.getIntrinsicHeight();
-        drawable.setBounds( point.x - width / 2, point.y - height / 2, point.x + width / 2, point.y + height / 2 );
-        return drawable;
+        //experimental
+        Drawable localCopy = drawable;
+        if (point.doUsePreferredSize()) {
+        	width = point.getPreferredWidth();
+        	height = point.getPreferredHeight();
+        	if (drawable instanceof GradientDrawable) {
+        		localCopy = drawable.getConstantState().newDrawable().mutate();
+        		((GradientDrawable) localCopy).setSize(width, height);
+        	}
+        }
+        	
+        localCopy.setBounds( point.x - width / 2, point.y - height / 2, point.x + width / 2, point.y + height / 2 );
+        return localCopy;
     }
     
     public void setListPoints(List< LabeledPoint > listPoints) {
@@ -133,10 +150,15 @@ public class DefaultDrawViewAdapter implements DrawViewAdapter {
         Drawable drawable = getDrawableAt( position );
         Layout textLayout = getTextLayoutAt( position );
         Point point = getListPoint(position);
-        final int marginX = drawable.getIntrinsicWidth() / 4 + margin;
-        final int marginY = drawable.getIntrinsicHeight() / 4 + margin;
+        final int marginX = drawable.getIntrinsicWidth() / 3 + margin;
+        final int marginY = drawable.getIntrinsicHeight() / 3 + margin;
         int textX = point.x > screenWidth / 2 ? point.x - marginX - textLayout.getWidth() : point.x + marginX;
         int textY = point.y > screenHeight / 2 ? point.y - marginY - textLayout.getHeight() : point.y + marginY;
         return new Point( textX, textY );
     }
+
+	@Override
+	public String getTextAt(int position) {
+		return getListPoint(position).getText();
+	}
 }

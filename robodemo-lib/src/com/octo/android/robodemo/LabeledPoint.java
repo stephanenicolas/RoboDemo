@@ -25,12 +25,19 @@ public class LabeledPoint extends Point implements Parcelable {
 
     /** The text associated to this point. */
     private String text;
+    
+    //experimental
+    private boolean usePreferredSize = false;
+    private int preferredWidth;
+    private int preferredHeight;
 
     /**
      * Creates an empty {@link LabeledPoint}.
      */
     public LabeledPoint() {
     	text="";
+    	x = -100;
+    	y = -100;
     }
 
     /**
@@ -91,7 +98,7 @@ public class LabeledPoint extends Point implements Parcelable {
      *            the view on which to center the point.
      */
     public LabeledPoint( View v ) {
-        this( v, 50, 50, null );
+        this( v, 50, 50, null, true);
     }
 
     /**
@@ -103,7 +110,7 @@ public class LabeledPoint extends Point implements Parcelable {
      *            the new text of the point.
      */
     public LabeledPoint( View v, String text ) {
-        this( v, 50, 50, text );
+        this( v, 50, 50, text, true);
     }
 
     /**
@@ -119,7 +126,7 @@ public class LabeledPoint extends Point implements Parcelable {
      * 
      */
     public LabeledPoint( View v, float widthPercent, float heightPercent ) {
-        this( v, widthPercent, heightPercent, null );
+        this( v, widthPercent, heightPercent, null, true);
     }
 
     /**
@@ -135,16 +142,23 @@ public class LabeledPoint extends Point implements Parcelable {
      * 
      * @param text
      *            the new text of the point.
+     *            
+     * @param preferredSize
+     * 			  whether to use the size of the view for the drawable size.
      */
-    public LabeledPoint( View v, final float widthPercent, final float heightPercent, String text ) {
+    public LabeledPoint( View v, final float widthPercent, final float heightPercent, String text, boolean preferredSize) {
         if (v != null) {
+        	usePreferredSize = preferredSize;
         	setMeasuredLocation(widthPercent, heightPercent, v);
+        	
         	v.addOnLayoutChangeListener(new OnLayoutChangeListener() {
 				
 				@Override
 				public void onLayoutChange(View v, int left, int top, int right,
 						int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
 					setMeasuredLocation(widthPercent, heightPercent, v);
+					if (usePreferredSize)
+						setPreferredSize(v.getMeasuredWidth(), v.getMeasuredHeight());
 		            v.removeOnLayoutChangeListener(this);
 				}
 			});
@@ -152,7 +166,14 @@ public class LabeledPoint extends Point implements Parcelable {
         setText( text );
     }
     
-    /**
+    protected void setPreferredSize(int measuredWidth, int measuredHeight) {
+    	// use min because of DrawView.doUseClearPorterDuffXfermode uses canvas.drawCircle
+    	int min = Math.min(measuredWidth, measuredHeight);
+    	preferredWidth = min;
+    	preferredHeight = min;
+	}
+
+	/**
      * Creates a {@link LabeledPoint} positioned relatively to a given activity, with a given text.
      * @param activity - the view on which to center the point.
      * @param widthPercent - the percent of the view width at which to place the new point.
@@ -177,22 +198,12 @@ public class LabeledPoint extends Point implements Parcelable {
      * @param text
      *            the new text of the point.
      */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
-	@SuppressWarnings("deprecation")
     public LabeledPoint( Activity activity, float widthPercent, float heightPercent, String text ) {
 
         Display display = activity.getWindowManager().getDefaultDisplay();
-        int screenWidth = 0;
-        int screenHeight = 0;
-        if ( Build.VERSION.SDK_INT > Build.VERSION_CODES.HONEYCOMB_MR2 ) {
-            Point outSize = new Point();
-            display.getSize( outSize );
-            screenHeight = outSize.y;
-            screenWidth = outSize.x;
-        } else {
-            screenWidth = display.getWidth();
-            screenHeight = display.getHeight();
-        }
+        int screenWidth = getScreenWidth(display);
+        int screenHeight = getScreenHeight(display);
+
         x = (int) ( screenWidth * widthPercent );
         y = (int) ( screenHeight * heightPercent );
         setText( text );
@@ -245,7 +256,20 @@ public class LabeledPoint extends Point implements Parcelable {
      * @param stringID - the resource id for the string.
      */
     public LabeledPoint(Activity activity, float widthPercent, float heightPercent, int referenceID, int stringID) {
-    	this(activity.findViewById(referenceID), widthPercent, heightPercent, activity.getString(stringID));
+    	this(activity.findViewById(referenceID), widthPercent, heightPercent, activity.getString(stringID), true);
+    }
+    
+    /**
+     * Creates a {@link LabeledPoint} positioned relatively to a given view, with a given text.
+     * @param activity - the context for the view.
+     * @param widthPercent - the percent of the view width at which to place the new point.
+     * @param heightPercent - the percent of the view height at which to place the new point.
+     * @param referenceID - the resource id for the view.
+     * @param stringID - the resource id for the string.
+     * @param preferredSize - use the size from the view for the size of the drawable.
+     */
+    public LabeledPoint(Activity activity, float widthPercent, float heightPercent, int referenceID, int stringID, boolean preferredSize) {
+    	this(activity.findViewById(referenceID), widthPercent, heightPercent, activity.getString(stringID), preferredSize);
     }
 
     public String getText() {
@@ -266,6 +290,9 @@ public class LabeledPoint extends Point implements Parcelable {
     public void writeToParcel( Parcel out, int flags ) {
         out.writeInt( x );
         out.writeInt( y );
+        out.writeInt(preferredHeight);
+        out.writeInt(preferredWidth);
+        out.writeByte((byte) (usePreferredSize ? 1 : 0));
         out.writeString( text );
     }
 
@@ -303,6 +330,9 @@ public class LabeledPoint extends Point implements Parcelable {
     public void readFromParcel( Parcel in ) {
         x = in.readInt();
         y = in.readInt();
+        preferredHeight = in.readInt();
+        preferredWidth = in.readInt();
+        usePreferredSize = in.readByte() != 0;
         text = in.readString();
     }
 
@@ -312,5 +342,58 @@ public class LabeledPoint extends Point implements Parcelable {
 		v.getLocationOnScreen( location );
 		x = location[ 0 ] + Math.round( widthPercent * v.getMeasuredWidth() / 100 );
 		y = location[ 1 ] + Math.round( heightPercent * v.getMeasuredHeight() / 100 );
+	}
+	
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
+	@SuppressWarnings("deprecation")
+	private int getScreenWidth(Display display) {
+		int screenWidth;
+		if ( Build.VERSION.SDK_INT > Build.VERSION_CODES.HONEYCOMB_MR2 ) {
+            Point outSize = new Point();
+            display.getSize( outSize );
+            screenWidth = outSize.x;
+        } else {
+            screenWidth = display.getWidth();
+        }
+		return screenWidth;
+	}
+	
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
+	@SuppressWarnings("deprecation")
+	private int getScreenHeight(Display display) {
+		int screenHeight;
+		if ( Build.VERSION.SDK_INT > Build.VERSION_CODES.HONEYCOMB_MR2 ) {
+            Point outSize = new Point();
+            display.getSize( outSize );
+            screenHeight = outSize.y;
+        } else {
+            screenHeight = display.getHeight();
+        }
+		return screenHeight;
+	}
+
+	//experimental
+	public int getPreferredWidth() {
+		return preferredWidth;
+	}
+
+	public void setPreferredWidth(int preferedWidth) {
+		this.preferredWidth = preferedWidth;
+	}
+
+	public int getPreferredHeight() {
+		return preferredHeight;
+	}
+
+	public void setPreferredHeight(int preferedHeight) {
+		this.preferredHeight = preferedHeight;
+	}
+
+	public boolean doUsePreferredSize() {
+		return usePreferredSize;
+	}
+
+	public void setUsePreferredSize(boolean usePreferredSize) {
+		this.usePreferredSize = usePreferredSize;
 	}
 }

@@ -50,5 +50,12 @@ public interface DrawViewAdapter {
      * @return the {@link Layout} to use when rendering the text of the {@link LabeledPoint} at a given position.
      */
     public Layout getTextLayoutAt( int position );
+    
+    /**
+     * Get the text of the {@link LabeledPoint} at position.
+     * @param position - the position of the {@link LabeledPoint} to render.
+     * @return the text of the {@link LabeledPoint}.
+     */
+    public String getTextAt(int position);
 
 }

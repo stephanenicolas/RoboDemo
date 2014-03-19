@@ -20,7 +20,7 @@ public class MainActivityDemoActivity extends DemoActivity {
 
     @Override
     public DrawViewAdapter getDrawViewAdapter() {
-        Drawable drawable = getResources().getDrawable( R.drawable.ic_lockscreen_handle_pressed );
+        Drawable drawable = getResources().getDrawable( R.drawable.ic_lockscreen_handle );
         TextPaint textPaint = new TextPaint();
         textPaint.setColor( getResources().getColor( android.R.color.white ) );
         textPaint.setShadowLayer( 2.0f, 0, 2.0f, getResources().getColor( android.R.color.black ) );

@@ -38,6 +38,7 @@ public class DrawView extends View {
      * The defaut delay between points in animation in ms.
      */
     private static final long DELAY_BETWEEN_POINTS = 2000;
+	private static final boolean ISAUTOMATEDTESTMODE = false;
 
     private DrawViewAdapter drawViewAdapter;
     private int handlerType;
@@ -176,6 +177,8 @@ public class DrawView extends View {
      */
     public void setDrawViewAdapterLabeledPoints(List< LabeledPoint > listPoints) {
     	((DefaultDrawViewAdapter) drawViewAdapter).setListPoints(listPoints);
+    	if (currentPointPositionToDisplay > getAdapterPointCount() - 1) // almost the same as isAnimationTerminated()
+    		terminateAnimation();
     }
 
     /**
@@ -271,6 +274,7 @@ public class DrawView extends View {
     protected void drawPoint( int position, Canvas canvas ) {
         drawText( position, canvas );
         drawDrawable( position, canvas );
+        updateContentDescription(position);
     }
 
     /**
@@ -354,17 +358,29 @@ public class DrawView extends View {
 
     @Override
 	public boolean dispatchTouchEvent(MotionEvent event) {
+    	if (ISAUTOMATEDTESTMODE)
+    		event = putTouchEventInLabledPoint(event, drawViewAdapter.getDrawableAt( currentPointPositionToDisplay ));
+    	
     	if (isTouchHandler() && isTouchEventInLabeledPoint(event, drawViewAdapter.getDrawableAt( currentPointPositionToDisplay ))) {
-    			if (event.getAction() == MotionEvent.ACTION_UP)
-    				showNextPoint();
-    			if (mTouchDispatchDelegate != null)
-    				return mTouchDispatchDelegate.sendTouchEvent(event);
-    			else
-    				return true;
+			if (event.getAction() == MotionEvent.ACTION_UP)
+				showNextPoint();
+			if (mTouchDispatchDelegate != null)
+				return mTouchDispatchDelegate.sendTouchEvent(event);
+			else
+				return true;
     	}
     		
     	return super.dispatchTouchEvent(event);
 	}
+    
+    /**
+     * Allow UiAutomator to know the text of the current point through content description.
+     * @param - position of the {@link LabeledPoint}.
+     */
+    private void updateContentDescription(int position) {
+    	String text = drawViewAdapter.getTextAt(position);
+    	setContentDescription(text);
+    }
 
 	private boolean isTouchHandler() {
 		return handlerType == 2 || isTouchDrivenAnimationHandler();
@@ -384,6 +400,11 @@ public class DrawView extends View {
 		//change < to <= to include points on circle
 		boolean result = Math.pow((x - center_x), 2) + Math.pow((y - center_y), 2) < Math.pow(radius, 2);
 		return result;
+	}
+	
+	private MotionEvent putTouchEventInLabledPoint(MotionEvent event, Drawable drawable) {
+		event.setLocation(drawable.getBounds().centerX(), drawable.getBounds().centerY());
+		return event;
 	}
 
 	public TouchDispatchDelegate getTouchDispatchDelegate() {

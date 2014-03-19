@@ -11,7 +11,7 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:background="@android:color/transparent"
-        app:drawable="@drawable/ic_lockscreen_handle_pressed"
+        app:drawable="@drawable/ic_lockscreen_handle"
         app:handlerType="AnimationHandler"
         app:isDrawingOnePointAtATime="true"
         app:isShowingAllPointsAtTheEndOfAnimation="false"
