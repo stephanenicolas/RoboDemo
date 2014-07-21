@@ -10,11 +10,11 @@ Screenshots
 
 Here is an example (from the sample application) :
 
-*1.*![Activity under showcase](https://github.com/stephanenicolas/RoboDemo/raw/master/docs/activity-under-showcase-small.png "Activity under showcase")
+![Activity under showcase](https://github.com/stephanenicolas/RoboDemo/raw/master/docs/activity-under-showcase-small.png "Activity under showcase")
 &nbsp;
-*2.*![Activity showcase animation step 1](https://raw.github.com/stephanenicolas/RoboDemo/master/docs/activity-showcase-animation-1-small.png "Activity showcase animation step 1")
+![Activity showcase animation step 1](https://raw.github.com/stephanenicolas/RoboDemo/master/docs/activity-showcase-animation-1-small.png "Activity showcase animation step 1")
 &nbsp;
-*3.*![Activity showcase animation step 2](https://raw.github.com/stephanenicolas/RoboDemo/master/docs/activity-showcase-animation-2-small.png "Activity showcase animation step 2")
+![Activity showcase animation step 2](https://raw.github.com/stephanenicolas/RoboDemo/master/docs/activity-showcase-animation-2-small.png "Activity showcase animation step 2")
 
 From left to right : 
 
