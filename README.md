@@ -5,6 +5,10 @@ RoboDemo is a ShowCase library for Android to demonstrate to users how a given A
 
 A sample is available in the [download area](https://github.com/stephanenicolas/RoboDemo/downloads) of the repository.
 
+RoboDemo is not maintained anymore. It works but you may find more convenient to use a maintained library in : 
+https://github.com/amlcurran/ShowcaseView
+
+
 Screenshots 
 -----------
 
