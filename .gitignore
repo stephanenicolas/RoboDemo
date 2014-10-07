@@ -34,3 +34,5 @@ target/
 #Maven release files
 *.releaseBackup
 *.versionsBackup
+robodemo-lib/project.properties
+robodemo-sample/project.properties

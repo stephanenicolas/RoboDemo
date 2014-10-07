@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="width_mdpi">108dp</dimen>
+    <dimen name="height_mdpi">108dp</dimen>
+    
+    <dimen name="width_hdpi">108dp</dimen>
+    <dimen name="height_hdpi">108dp</dimen>
+    
+    <dimen name="width_xhdpi">162dp</dimen>
+    <dimen name="height_xhdpi">162dp</dimen>
+</resources>

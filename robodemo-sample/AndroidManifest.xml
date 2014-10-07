@@ -4,7 +4,7 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="7"
+        android:minSdkVersion="11"
         android:targetSdkVersion="15" />
 
     <application
@@ -25,6 +25,7 @@
             android:configChanges="orientation|screenSize"
             android:name=".MainActivityDemoActivity"
             android:theme="@style/Theme.RoboDemo" />
+        <activity android:name="SecondActivity"></activity>
     </application>
 
 </manifest>

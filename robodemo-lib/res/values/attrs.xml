@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="DrawView">
+        <!-- Used by the DrawViewAdapter for each LabeledPoint -->
+        <attr name="drawable" format="reference"/>
+        <!-- Color of the text -->
+        <attr name="textColor" format="reference|color"/>
+        <!-- Whether the text should be anti-alias -->
+        <attr name="textAntiAlias" format="boolean"/>
+        <!-- Size of the text -->
+        <attr name="textSize" format="dimension"/>
+        <!-- Radius of the shadow -->
+        <attr name="shadowLayerBlurRadius" format="float" />
+        <!-- Horizontal offset of the shadow -->
+        <attr name="shadowLayerXOffset" format="float" />
+        <!-- Vertical offset of the shadow -->
+        <attr name="shadowLayerYOffset" format="float" />
+        <!-- Color of the shadow -->
+        <attr name="shadowLayerColor" format="reference|color" />
+        <!-- Color of the under text -->
+        <attr name="underTextPaintColor" format="reference|color" />
+        <!-- Alpha of the under text -->
+        <attr name="underTextPaintAlpha" format="integer" />
+        <!-- Whether LabeledPoints are drawn one at a time -->
+        <attr name="isDrawingOnePointAtATime" format="boolean" />
+        <!-- Whether to draw all LabeledPoints at end of animation -->
+        <attr name="isShowingAllPointsAtTheEndOfAnimation" format="boolean" />
+        <!-- Delay between points in animation in ms -->
+        <attr name="delayBetweenPoints" format="integer" />
+        <!-- Type of handler to use -->
+        <attr name="handlerType" format="enum">
+            <!-- Showcase -->
+        	<enum name="AnimationHandler" value="1" />
+        	<!-- Walkthrough -->
+        	<enum name="TouchHandler" value="2" />
+        	<!-- Touch Driven Showcase -->
+        	<enum name="TouchAnimationHandler" value="3" />
+    	</attr>
+    </declare-styleable>
+</resources>
